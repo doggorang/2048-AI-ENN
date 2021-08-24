@@ -2116,6 +2116,9 @@ GameObject:
   - component: {fileID: 642862717}
   - component: {fileID: 642862716}
   - component: {fileID: 642862720}
+  - component: {fileID: 642862723}
+  - component: {fileID: 642862722}
+  - component: {fileID: 642862721}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2213,6 +2216,120 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7de289cee1047554b8e14dab1400f62e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &642862721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642862715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815be1ba186413a4d88b7068bfe7d93f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileStyles:
+  - number: 2
+    tile_color:
+      serializedVersion: 2
+      rgba: 4292535534
+    text_color:
+      serializedVersion: 2
+      rgba: 4284837495
+  - number: 4
+    tile_color:
+      serializedVersion: 2
+      rgba: 4291354861
+    text_color:
+      serializedVersion: 2
+      rgba: 4284837495
+  - number: 8
+    tile_color:
+      serializedVersion: 2
+      rgba: 4286165490
+    text_color:
+      serializedVersion: 2
+      rgba: 4294113017
+  - number: 16
+    tile_color:
+      serializedVersion: 2
+      rgba: 4284716533
+    text_color:
+      serializedVersion: 2
+      rgba: 4294113017
+  - number: 32
+    tile_color:
+      serializedVersion: 2
+      rgba: 4284447990
+    text_color:
+      serializedVersion: 2
+      rgba: 4294113017
+  - number: 64
+    tile_color:
+      serializedVersion: 2
+      rgba: 4282081014
+    text_color:
+      serializedVersion: 2
+      rgba: 4294113017
+  - number: 128
+    tile_color:
+      serializedVersion: 2
+      rgba: 4285714413
+    text_color:
+      serializedVersion: 2
+      rgba: 4293850617
+  - number: 256
+    tile_color:
+      serializedVersion: 2
+      rgba: 4284599533
+    text_color:
+      serializedVersion: 2
+      rgba: 4293981945
+  - number: 512
+    tile_color:
+      serializedVersion: 2
+      rgba: 4283484397
+    text_color:
+      serializedVersion: 2
+      rgba: 4294113017
+  - number: 1024
+    tile_color:
+      serializedVersion: 2
+      rgba: 4282369517
+    text_color:
+      serializedVersion: 2
+      rgba: 4293916153
+  - number: 2048
+    tile_color:
+      serializedVersion: 2
+      rgba: 4281254637
+    text_color:
+      serializedVersion: 2
+      rgba: 15922937
+--- !u!114 &642862722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642862715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28d0f52552104f4fba9596fe399e5ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &642862723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642862715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcc017900d46a5e4fa4abefc3b935409, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &655949096
@@ -3634,7 +3751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0.9333334, g: 0.8941177, b: 0.854902, a: 0.392}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
