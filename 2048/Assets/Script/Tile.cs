@@ -5,6 +5,29 @@ using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
+    public int indRow;
+    public int indCol;
+    public int Number
+    {
+        get
+        {
+            return number;
+        }
+        set
+        {
+            number = value;
+            if (number == 0)
+            {
+                SetEmpty();
+            }
+            else
+            {
+                ApplyStyle(number);
+                SetVisible();
+            }
+        }
+    } 
+    private int number;
     private Text TileText;
     private Image TileImage;
     private void Awake()
@@ -15,7 +38,7 @@ public class Tile : MonoBehaviour
 
     void ApplyStyleFromHolder(int index)
     {
-        TileText.text = TileStyleHolder.Instance.tileStyles[index].number + "";
+        TileText.text = TileStyleHolder.Instance.tileStyles[index].number.ToString();
         TileText.color = TileStyleHolder.Instance.tileStyles[index].text_color;
         TileImage.color = TileStyleHolder.Instance.tileStyles[index].tile_color;
     }
@@ -62,6 +85,19 @@ public class Tile : MonoBehaviour
                 break;
         }
     }
+
+    private void SetVisible()
+    {
+        TileImage.enabled = true;
+        TileText.enabled = true;
+    }
+
+    private void SetEmpty()
+    {
+        TileImage.enabled = false;
+        TileText.enabled = false;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
