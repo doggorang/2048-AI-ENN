@@ -33,9 +33,18 @@ public class Game : MonoBehaviour
     {
         for (int i = 0; i < LineOfTiles.Length-1; i++)
         {
+            // check 1 block away if this tile empty and next tile has number then swicth place
             if (LineOfTiles[i].Number == 0 && LineOfTiles[i+1].Number != 0)
             {
                 LineOfTiles[i].Number = LineOfTiles[i + 1].Number;
+                LineOfTiles[i + 1].Number = 0;
+                return true;
+            }
+            // merge tile if 2 colliding tile has the same number also check if the tile hasn't merge because only can merge once
+            if (LineOfTiles[i].Number != 0 && LineOfTiles[i].Number == LineOfTiles[i+1].Number && !LineOfTiles[i].mergeThisTurn && !LineOfTiles[i+1].mergeThisTurn)
+            {
+                LineOfTiles[i].Number *= 2;
+                LineOfTiles[i].mergeThisTurn = true;
                 LineOfTiles[i + 1].Number = 0;
                 return true;
             }
@@ -49,6 +58,13 @@ public class Game : MonoBehaviour
             if (LineOfTiles[i].Number == 0 && LineOfTiles[i-1].Number != 0)
             {
                 LineOfTiles[i].Number = LineOfTiles[i - 1].Number;
+                LineOfTiles[i - 1].Number = 0;
+                return true;
+            }
+            if (LineOfTiles[i].Number != 0 && LineOfTiles[i].Number == LineOfTiles[i - 1].Number && !LineOfTiles[i].mergeThisTurn && !LineOfTiles[i - 1].mergeThisTurn)
+            {
+                LineOfTiles[i].Number *= 2;
+                LineOfTiles[i].mergeThisTurn = true;
                 LineOfTiles[i - 1].Number = 0;
                 return true;
             }
@@ -79,8 +95,17 @@ public class Game : MonoBehaviour
         }
     }
 
+    private void ResetMergedFlags()
+    {
+        foreach (Tile t in AllTiles)
+        {
+            t.mergeThisTurn = false;
+        }
+    }
+
     public void Move(MoveDirection md)
     {
+        ResetMergedFlags();
         for (int i = 0; i < rows.Count; i++)
         {
             switch (md)
