@@ -27,6 +27,7 @@ public class Game : MonoBehaviour
         rows.Add(new Tile[] { AllTiles[1, 0], AllTiles[1, 1], AllTiles[1, 2], AllTiles[1, 3] });
         rows.Add(new Tile[] { AllTiles[2, 0], AllTiles[2, 1], AllTiles[2, 2], AllTiles[2, 3] });
         rows.Add(new Tile[] { AllTiles[3, 0], AllTiles[3, 1], AllTiles[3, 2], AllTiles[3, 3] });
+        Generate(); Generate();
     }
 
     bool MakeOneMoveDownIndex(Tile[] LineOfTiles)
@@ -89,10 +90,7 @@ public class Game : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            Generate();
-        }
+
     }
 
     private void ResetMergedFlags()
@@ -103,28 +101,58 @@ public class Game : MonoBehaviour
         }
     }
 
+    private void UpdateEmptyTiles()
+    {
+        EmptyTiles.Clear();
+        foreach (Tile t in AllTiles)
+        {
+            if (t.Number == 0)
+            {
+                EmptyTiles.Add(t);
+            }
+        }
+    }
+
     public void Move(MoveDirection md)
     {
+        bool moveMade = false;
         ResetMergedFlags();
         for (int i = 0; i < rows.Count; i++)
         {
             switch (md)
             {
                 case MoveDirection.Left:
-                    while (MakeOneMoveDownIndex(rows[i])) { }
+                    while (MakeOneMoveDownIndex(rows[i]))
+                    {
+                        moveMade = true;
+                    }
                     break;
                 case MoveDirection.Right:
-                    while (MakeOneMoveUpIndex(rows[i])) { }
+                    while (MakeOneMoveUpIndex(rows[i]))
+                    {
+                        moveMade = true;
+                    }
                     break;
                 case MoveDirection.Up:
-                    while (MakeOneMoveDownIndex(columns[i])) { }
+                    while (MakeOneMoveDownIndex(columns[i]))
+                    {
+                        moveMade = true;
+                    }
                     break;
                 case MoveDirection.Down:
-                    while (MakeOneMoveUpIndex(columns[i])) { }
+                    while (MakeOneMoveUpIndex(columns[i]))
+                    {
+                        moveMade = true;
+                    }
                     break;
                 default:
                     break;
             }
+        }
+        if (moveMade)
+        {
+            UpdateEmptyTiles();
+            Generate();
         }
     }
 }
