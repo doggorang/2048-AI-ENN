@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
+    public Text GameOverText;
+    public GameObject GameOverPanel;
     private Tile[,] AllTiles = new Tile[4, 4];
     private List<Tile[]> columns = new List<Tile[]>();
     private List<Tile[]> rows = new List<Tile[]>();
@@ -30,6 +33,36 @@ public class Game : MonoBehaviour
         Generate(); Generate();
     }
 
+    private void GameOver(string text)
+    {
+        GameOverText.text = text;
+        GameOverPanel.SetActive(true);
+    }
+
+    bool CanMove()
+    {
+        // if there is an empty tile that means you can still move
+        if (EmptyTiles.Count > 0)
+        {
+            return true;
+        }
+        else
+        {
+            // if there are no move check if there are any tile that can merge
+            // check columns
+            for (int i = 0; i < columns.Count; i++)
+                for (int j = 0; j < rows.Count-1; j++)
+                    if (AllTiles[j,i].Number == AllTiles[j+1, i].Number)
+                        return true;
+            // check rows
+            for (int i = 0; i < rows.Count; i++)
+                for (int j = 0; j < columns.Count-1; j++)
+                    if (AllTiles[i, j].Number == AllTiles[i, j+1].Number)
+                        return true;
+        }
+        return false;
+    }
+
     bool MakeOneMoveDownIndex(Tile[] LineOfTiles)
     {
         for (int i = 0; i < LineOfTiles.Length-1; i++)
@@ -47,6 +80,11 @@ public class Game : MonoBehaviour
                 LineOfTiles[i].Number *= 2;
                 LineOfTiles[i].mergeThisTurn = true;
                 LineOfTiles[i + 1].Number = 0;
+                ScoreTracker.Instance.Score += LineOfTiles[i].Number;
+                if (LineOfTiles[i].Number == 2048)
+                {
+                    GameOver("You Win");
+                }
                 return true;
             }
         }
@@ -67,6 +105,11 @@ public class Game : MonoBehaviour
                 LineOfTiles[i].Number *= 2;
                 LineOfTiles[i].mergeThisTurn = true;
                 LineOfTiles[i - 1].Number = 0;
+                ScoreTracker.Instance.Score += LineOfTiles[i].Number;
+                if (LineOfTiles[i].Number == 2048)
+                {
+                    GameOver("You Win");
+                }
                 return true;
             }
         }
@@ -96,21 +139,15 @@ public class Game : MonoBehaviour
     private void ResetMergedFlags()
     {
         foreach (Tile t in AllTiles)
-        {
             t.mergeThisTurn = false;
-        }
     }
 
     private void UpdateEmptyTiles()
     {
         EmptyTiles.Clear();
         foreach (Tile t in AllTiles)
-        {
             if (t.Number == 0)
-            {
                 EmptyTiles.Add(t);
-            }
-        }
     }
 
     public void Move(MoveDirection md)
@@ -123,27 +160,19 @@ public class Game : MonoBehaviour
             {
                 case MoveDirection.Left:
                     while (MakeOneMoveDownIndex(rows[i]))
-                    {
                         moveMade = true;
-                    }
                     break;
                 case MoveDirection.Right:
                     while (MakeOneMoveUpIndex(rows[i]))
-                    {
                         moveMade = true;
-                    }
                     break;
                 case MoveDirection.Up:
                     while (MakeOneMoveDownIndex(columns[i]))
-                    {
                         moveMade = true;
-                    }
                     break;
                 case MoveDirection.Down:
                     while (MakeOneMoveUpIndex(columns[i]))
-                    {
                         moveMade = true;
-                    }
                     break;
                 default:
                     break;
@@ -153,6 +182,10 @@ public class Game : MonoBehaviour
         {
             UpdateEmptyTiles();
             Generate();
+            if (!CanMove())
+            {
+                GameOver("You Lose");
+            }
         }
     }
 }

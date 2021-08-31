@@ -9,6 +9,23 @@ public class ScoreTracker : MonoBehaviour
     public static ScoreTracker Instance;
     public Text ScoreText;
     public Text HighScoreText;
+    public int Score
+    {
+        get
+        {
+            return score;
+        }
+        set
+        {
+            score = value;
+            ScoreText.text = score.ToString();
+            if (PlayerPrefs.GetInt("HighScore") < score)
+            {
+                PlayerPrefs.SetInt("HighScore", score);
+                ScoreText.text = score.ToString();
+            }
+        }
+    }
     void Awake()
     {
         Instance = this;
