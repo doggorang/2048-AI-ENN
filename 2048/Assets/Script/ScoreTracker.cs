@@ -12,5 +12,11 @@ public class ScoreTracker : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        if (!PlayerPrefs.HasKey("HighScore"))
+        {
+            PlayerPrefs.SetInt("HighScore", score);
+        }
+        ScoreText.text = "0";
+        HighScoreText.text = PlayerPrefs.GetInt("HighScore").ToString();
     }
 }
