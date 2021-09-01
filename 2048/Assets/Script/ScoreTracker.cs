@@ -26,7 +26,7 @@ public class ScoreTracker : MonoBehaviour
             }
         }
     }
-    void Awake()
+    private void Awake()
     {
         Instance = this;
         if (!PlayerPrefs.HasKey("HighScore"))

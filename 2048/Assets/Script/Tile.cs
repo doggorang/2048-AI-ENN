@@ -31,10 +31,21 @@ public class Tile : MonoBehaviour
     private int number;
     private Text TileText;
     private Image TileImage;
+    private Animator anim;
     private void Awake()
     {
+        anim = GetComponent<Animator>();
         TileText = GetComponentInChildren<Text>();
         TileImage = transform.Find("NumberedCell").GetComponent<Image>();
+    }
+
+    public void PlayMergeAnimation()
+    {
+        anim.SetTrigger("Merge");
+    }
+    public void PlayAppearAnimation()
+    {
+        anim.SetTrigger("Appear");
     }
 
     void ApplyStyleFromHolder(int index)
