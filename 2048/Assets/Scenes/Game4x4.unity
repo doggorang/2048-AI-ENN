@@ -2695,7 +2695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   State: 0
-  delay: 0
+  delay: 0.03
   GameOverText: {fileID: 1740297835}
   GameOverPanel: {fileID: 2025762648}
 --- !u!114 &642862724
