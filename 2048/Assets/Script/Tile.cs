@@ -92,6 +92,18 @@ public class Tile : MonoBehaviour
             case 2048:
                 ApplyStyleFromHolder(10);
                 break;
+            case 4096:
+                ApplyStyleFromHolder(11);
+                break;
+            case 8192:
+                ApplyStyleFromHolder(12);
+                break;
+            case 16384:
+                ApplyStyleFromHolder(13);
+                break;
+            case 32768:
+                ApplyStyleFromHolder(14);
+                break;
             default:
                 Debug.Log("Error check number you pass in here");
                 break;
