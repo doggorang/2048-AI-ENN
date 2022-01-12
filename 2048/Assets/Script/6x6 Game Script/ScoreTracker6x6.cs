@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreTracker : MonoBehaviour
+public class ScoreTracker6x6 : MonoBehaviour
 {
     private int score;
-    public static ScoreTracker Instance;
+    public static ScoreTracker6x6 Instance;
     public Text ScoreText;
     public Text HighScoreText;
     public int Score

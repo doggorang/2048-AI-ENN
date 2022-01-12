@@ -7,13 +7,13 @@ public enum MoveDirection
     Left, Right, Up, Down
 }
 
-public class InputManager : MonoBehaviour
+public class InputManager4x4 : MonoBehaviour
 {
-    private Game gm;
+    private GameScript4x4 gm;
 
     private void Awake()
     {
-        gm = GameObject.FindObjectOfType<Game>();
+        gm = GameObject.FindObjectOfType<GameScript4x4>();
     }
 
     // Start is called before the first frame update
