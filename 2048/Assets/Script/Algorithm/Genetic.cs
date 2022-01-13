@@ -6,6 +6,8 @@ public class Genetic : MonoBehaviour
 {
     private List<Individual> AllIndivual = new List<Individual>();
     private int population = 10;
+    private Individual fittest;
+    private Individual secondFittest;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +21,19 @@ public class Genetic : MonoBehaviour
             }
             AllIndivual.Add(new Individual(tempW));
         }
+    }
+    public void Selection()
+    {
+        fittest = AllIndivual[0];
+        secondFittest = AllIndivual[1];
+    }
+    public void Crossover()
+    {
+
+    }
+    public void Mutation()
+    {
+
     }
 
     // Update is called once per frame
