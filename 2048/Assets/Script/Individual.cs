@@ -4,23 +4,13 @@ using UnityEngine;
 
 public class Individual : MonoBehaviour
 {
-    public float Fitness;
-    private float[] weights = new float[6];
+    public int HighestTile = 0;
+    public int Score = 0;
+    public float Fitness = 0;
+    public float[] Weights = new float[6];
     public Individual(float[] weights)
     {
-        this.weights = weights;
-    }
-    public float[] Weights
-    {
-        get
-        {
-            return weights;
-        }
-        set
-        {
-            weights = value;
-            Fitness = 1;
-        }
+        Weights = weights;
     }
 
     private void Awake()
