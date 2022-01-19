@@ -5,10 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour
 {
-    public void Back()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-    }
     public void PlayGameStage1()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

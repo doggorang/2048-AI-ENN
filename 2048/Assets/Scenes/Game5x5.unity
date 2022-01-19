@@ -976,7 +976,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 767843464}
-        m_MethodName: Back
+        m_MethodName: PlayGameStage1
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2834,7 +2834,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Play With Biggger Map
+  m_Text: Play in 6x6 Map
 --- !u!222 &496613573
 CanvasRenderer:
   m_ObjectHideFlags: 0
