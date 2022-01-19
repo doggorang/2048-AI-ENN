@@ -19,6 +19,7 @@ public class GameScript4x4 : MonoBehaviour
     // bolean to check if move is done because it has delay so it doesnt move around
     private bool[] lineMoveComplete = new bool[4] { true, true, true, true };
 
+    public Text TextDescriptionAlgorithm, TextDescriptionArchitecture;
     public Text GameOverText;
     public GameObject GameOverPanel;
     private Tile[,] AllTiles = new Tile[4, 4];
@@ -28,6 +29,8 @@ public class GameScript4x4 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        TextDescriptionAlgorithm.text = "Algorithm  - <b>"+ AIController.algorithm + "</b>";
+        TextDescriptionArchitecture.text = "Architecture - <b>"+ AIController.architecture+ "</b>";
         Tile[] AllTilesOneDim = GameObject.FindObjectsOfType<Tile>();
         foreach (Tile t in AllTilesOneDim)
         {
