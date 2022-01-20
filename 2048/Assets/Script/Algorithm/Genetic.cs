@@ -44,7 +44,7 @@ public class Genetic : MonoBehaviour
         // calculate every individual's fitness
         for (int i = 0; i < Population.Count; i++)
         {
-            // calculate fitness
+            // calculate fitness highest tile saja karena saat endgame biasanya sudah berantakan jadi second highest tile dll pindah"
             Population[i].Fitness = ((Population[i].HighestTile / 2048) + (Population[i].Score / sumScore)) / 2;
             // find parent with most fit and second fit
             if (Population[i].Fitness > fittest.Fitness)

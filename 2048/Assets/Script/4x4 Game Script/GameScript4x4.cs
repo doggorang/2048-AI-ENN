@@ -112,6 +112,11 @@ public class GameScript4x4 : MonoBehaviour
                 {
                     GameOver("You Win");
                 }
+                // cek mendapatkan nilai tile terbesar
+                if (LineOfTiles[i].Number > HighestTile)
+                {
+                    HighestTile = LineOfTiles[i].Number;
+                }
                 return true;
             }
         }
@@ -137,6 +142,11 @@ public class GameScript4x4 : MonoBehaviour
                 if (LineOfTiles[i].Number == 2048)
                 {
                     GameOver("You Win");
+                }
+                // cek mendapatkan nilai tile terbesar
+                if (LineOfTiles[i].Number > HighestTile)
+                {
+                    HighestTile = LineOfTiles[i].Number;
                 }
                 return true;
             }
