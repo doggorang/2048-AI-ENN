@@ -26,6 +26,15 @@ public class GameScript4x4 : MonoBehaviour
     private List<Tile[]> columns = new List<Tile[]>();
     private List<Tile[]> rows = new List<Tile[]>();
     private List<Tile> EmptyTiles = new List<Tile>();
+
+    // variable untuk simpan 6 input layer
+    public int HighestTile = 0;
+    public int SequenceTile = 0;
+    public bool IsHighestTileCorner = false;
+    public int SequenceMerge = 0;
+    public int CountSmallTile = 0;
+    public bool IsHighestTileDense = false;
+
     // Start is called before the first frame update
     void Start()
     {

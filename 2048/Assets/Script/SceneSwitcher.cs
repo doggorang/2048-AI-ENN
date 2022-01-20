@@ -27,9 +27,8 @@ public class SceneSwitcher : MonoBehaviour
                 archi = GOArchi.transform.GetChild(i).Find("Label").GetComponent<Text>().text;
             }
         }
-        AIController.algorithm = algo;
-        AIController.architecture = archi;
-        Debug.Log(AIController.algorithm);
+        AIController.SwitchCaseAlgorithm(algo);
+        AIController.SwitchCaseArchitecture(archi);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
     public void PlayGameStage2()
