@@ -28,7 +28,7 @@ public class GameScript4x4 : MonoBehaviour
     private List<Tile> EmptyTiles = new List<Tile>();
 
     // variable untuk simpan 6 input layer
-    public int HighestTile = 0;
+    public Tile HighestTile;
     public int SequenceTile = 0;
     public bool IsHighestTileCorner = false;
     public int SequenceMerge = 0;
@@ -47,6 +47,7 @@ public class GameScript4x4 : MonoBehaviour
             AllTiles[t.indRow, t.indCol] = t;
             EmptyTiles.Add(t);
         }
+        HighestTile = AllTiles[0, 0];
         columns.Add(new Tile[] { AllTiles[0, 0], AllTiles[1, 0], AllTiles[2, 0], AllTiles[3, 0] });
         columns.Add(new Tile[] { AllTiles[0, 1], AllTiles[1, 1], AllTiles[2, 1], AllTiles[3, 1] });
         columns.Add(new Tile[] { AllTiles[0, 2], AllTiles[1, 2], AllTiles[2, 2], AllTiles[3, 2] });
@@ -112,10 +113,10 @@ public class GameScript4x4 : MonoBehaviour
                 {
                     GameOver("You Win");
                 }
-                // cek mendapatkan nilai tile terbesar
-                if (LineOfTiles[i].Number > HighestTile)
+                // input layer 1
+                if (LineOfTiles[i].Number > HighestTile.Number)
                 {
-                    HighestTile = LineOfTiles[i].Number;
+                    HighestTile = LineOfTiles[i];
                 }
                 return true;
             }
@@ -143,10 +144,10 @@ public class GameScript4x4 : MonoBehaviour
                 {
                     GameOver("You Win");
                 }
-                // cek mendapatkan nilai tile terbesar
-                if (LineOfTiles[i].Number > HighestTile)
+                // input layer 1
+                if (LineOfTiles[i].Number > HighestTile.Number)
                 {
-                    HighestTile = LineOfTiles[i].Number;
+                    HighestTile = LineOfTiles[i];
                 }
                 return true;
             }
@@ -184,10 +185,57 @@ public class GameScript4x4 : MonoBehaviour
 
     private void UpdateEmptyTiles()
     {
+        CountSmallTile = 0;
         EmptyTiles.Clear();
-        foreach (Tile t in AllTiles)
-            if (t.Number == 0)
-                EmptyTiles.Add(t);
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                int left, up, right, down;
+                if (i == 0)
+                {
+                    up = 0;
+                }
+                else
+                {
+                    up = AllTiles[i - 1, j].Number;
+                }    
+                if (i == 3)
+                {
+                    down = 0;
+                }
+                else
+                {
+                    down = AllTiles[i + 1, j].Number;
+                }
+                if (j == 0)
+                {
+                    left = 0;
+                }
+                else
+                {
+                    left = AllTiles[i, j - 1].Number;
+                }
+                if (j == 3)
+                {
+                    right = 0;
+                }
+                else
+                {
+                    right = AllTiles[i, j + 1].Number;
+                }
+                // step 1 input layer 2
+                AllTiles[i, j].TileAround = new int[4] { left, up, right, down };
+
+                // input layer 5
+                if (AllTiles[i, j].Number > 0 && AllTiles[i, j].Number <= 32)
+                    CountSmallTile++;
+
+                if (AllTiles[i, j].Number == 0)
+                    EmptyTiles.Add(AllTiles[i, j]);
+                
+            }
+        }
     }
 
     public void Move(MoveDirection md)
@@ -226,6 +274,51 @@ public class GameScript4x4 : MonoBehaviour
             }
             if (moveMade)
             {
+                // input layer 3
+                if (
+                    (HighestTile.indRow == 0 && HighestTile.indCol == 0) ||
+                    (HighestTile.indRow == 3 && HighestTile.indCol == 3) ||
+                    (HighestTile.indRow == 3 && HighestTile.indCol == 0) ||
+                    (HighestTile.indRow == 0 && HighestTile.indCol == 3)
+                )
+                {
+                    IsHighestTileCorner = true;
+                }
+                else
+                {
+                    IsHighestTileCorner = false;
+                }
+
+                // input layer 6
+                bool IsDense = true;
+                // check coloumn highest tile apakah dense
+                foreach (Tile column in columns[HighestTile.indCol])
+                {
+                    if (column.Number == 0)
+                    {
+                        IsDense = false;
+                        break;
+                    }
+                }
+                // kalau di coloumn sudah dense langsung set else check row
+                if (IsDense)
+                {
+                    IsHighestTileDense = IsDense;
+                }
+                else
+                {
+                    IsDense = true;
+                    // check ulang pada row apakah dense
+                    foreach (Tile row in rows[HighestTile.indRow])
+                    {
+                        if (row.Number == 0)
+                        {
+                            IsDense = false;
+                            break;
+                        }
+                    }
+                    IsHighestTileDense = IsDense;
+                }
                 UpdateEmptyTiles();
                 Generate();
                 if (!CanMove())

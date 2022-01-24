@@ -8,6 +8,8 @@ public class Tile : MonoBehaviour
     public bool mergeThisTurn = false;
     public int indRow;
     public int indCol;
+    // TileAround untuk menyimpan angka tile disekitar, array size 4 yaitu left, up, right, down
+    public int[] TileAround = new int[4];
     public int Number
     {
         get
