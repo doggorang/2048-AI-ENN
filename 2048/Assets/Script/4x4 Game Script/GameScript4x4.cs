@@ -13,7 +13,7 @@ public enum GameState
 public class GameScript4x4 : MonoBehaviour
 {
     public GameState State;
-    [Range(0,2f)]
+    [Range(0, 2f)]
     public float delay;
     private bool moveMade;
     // bolean to check if move is done because it has delay so it doesnt move around
@@ -28,18 +28,18 @@ public class GameScript4x4 : MonoBehaviour
     private List<Tile> EmptyTiles = new List<Tile>();
 
     // variable untuk simpan 6 input layer
-    public Tile HighestTile;
-    public int SequenceTile = 0;
-    public bool IsHighestTileCorner = false;
-    public int SequenceMerge = 0;
-    public int CountSmallTile = 0;
-    public bool IsHighestTileDense = false;
+    private Tile HighestTile;
+    private int SequenceTile = 0;
+    private bool IsHighestTileCorner = false;
+    private int SequenceMerge = 0;
+    private int CountSmallTile = 0;
+    private bool IsHighestTileDense = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        TextDescriptionAlgorithm.text = "Algorithm  - <b>"+ AIController.algorithm + "</b>";
-        TextDescriptionArchitecture.text = "Architecture - <b>"+ AIController.architecture+ "</b>";
+        TextDescriptionAlgorithm.text = "Algorithm  - <b>" + AIController.algorithm + "</b>";
+        TextDescriptionArchitecture.text = "Architecture - <b>" + AIController.architecture + "</b>";
         Tile[] AllTilesOneDim = GameObject.FindObjectsOfType<Tile>();
         foreach (Tile t in AllTilesOneDim)
         {
@@ -78,13 +78,13 @@ public class GameScript4x4 : MonoBehaviour
             // if there are no move check if there are any tile that can merge
             // check columns
             for (int i = 0; i < columns.Count; i++)
-                for (int j = 0; j < rows.Count-1; j++)
-                    if (AllTiles[j,i].Number == AllTiles[j+1, i].Number)
+                for (int j = 0; j < rows.Count - 1; j++)
+                    if (AllTiles[j, i].Number == AllTiles[j + 1, i].Number)
                         return true;
             // check rows
             for (int i = 0; i < rows.Count; i++)
-                for (int j = 0; j < columns.Count-1; j++)
-                    if (AllTiles[i, j].Number == AllTiles[i, j+1].Number)
+                for (int j = 0; j < columns.Count - 1; j++)
+                    if (AllTiles[i, j].Number == AllTiles[i, j + 1].Number)
                         return true;
         }
         return false;
@@ -92,17 +92,22 @@ public class GameScript4x4 : MonoBehaviour
 
     bool MakeOneMoveDownIndex(Tile[] LineOfTiles)
     {
-        for (int i = 0; i < LineOfTiles.Length-1; i++)
+        for (int i = 0; i < LineOfTiles.Length - 1; i++)
         {
             // check 1 block away if this tile empty and next tile has number then swicth place
-            if (LineOfTiles[i].Number == 0 && LineOfTiles[i+1].Number != 0)
+            if (LineOfTiles[i].Number == 0 && LineOfTiles[i + 1].Number != 0)
             {
                 LineOfTiles[i].Number = LineOfTiles[i + 1].Number;
                 LineOfTiles[i + 1].Number = 0;
+                // input layer 1
+                if (LineOfTiles[i].Number > HighestTile.Number)
+                {
+                    HighestTile = LineOfTiles[i];
+                }
                 return true;
             }
             // merge tile if 2 colliding tile has the same number also check if the tile hasn't merge because only can merge once
-            if (LineOfTiles[i].Number != 0 && LineOfTiles[i].Number == LineOfTiles[i+1].Number && !LineOfTiles[i].mergeThisTurn && !LineOfTiles[i+1].mergeThisTurn)
+            if (LineOfTiles[i].Number != 0 && LineOfTiles[i].Number == LineOfTiles[i + 1].Number && !LineOfTiles[i].mergeThisTurn && !LineOfTiles[i + 1].mergeThisTurn)
             {
                 LineOfTiles[i].Number *= 2;
                 LineOfTiles[i].mergeThisTurn = true;
@@ -125,12 +130,17 @@ public class GameScript4x4 : MonoBehaviour
     }
     bool MakeOneMoveUpIndex(Tile[] LineOfTiles)
     {
-        for (int i = LineOfTiles.Length-1; i > 0; i--)
+        for (int i = LineOfTiles.Length - 1; i > 0; i--)
         {
-            if (LineOfTiles[i].Number == 0 && LineOfTiles[i-1].Number != 0)
+            if (LineOfTiles[i].Number == 0 && LineOfTiles[i - 1].Number != 0)
             {
                 LineOfTiles[i].Number = LineOfTiles[i - 1].Number;
                 LineOfTiles[i - 1].Number = 0;
+                // input layer 1
+                if (LineOfTiles[i].Number > HighestTile.Number)
+                {
+                    HighestTile = LineOfTiles[i];
+                }
                 return true;
             }
             if (LineOfTiles[i].Number != 0 && LineOfTiles[i].Number == LineOfTiles[i - 1].Number && !LineOfTiles[i].mergeThisTurn && !LineOfTiles[i - 1].mergeThisTurn)
@@ -160,7 +170,7 @@ public class GameScript4x4 : MonoBehaviour
         if (EmptyTiles.Count > 0)
         {
             int idxnewnumber = Random.Range(0, EmptyTiles.Count);
-            int randomnum = Random.Range(0,10);
+            int randomnum = Random.Range(0, 10);
             if (randomnum == 0)
                 EmptyTiles[idxnewnumber].Number = 4;
             else
@@ -191,41 +201,44 @@ public class GameScript4x4 : MonoBehaviour
         {
             for (int j = 0; j < 4; j++)
             {
-                int left, up, right, down;
+                // step 1 input layer 2 & 4
+                Tile left, up, right, down;
                 if (i == 0)
                 {
-                    up = 0;
+                    up = null;
                 }
                 else
                 {
-                    up = AllTiles[i - 1, j].Number;
-                }    
+                    up = AllTiles[i - 1, j];
+                }
+
                 if (i == 3)
                 {
-                    down = 0;
+                    down = null;
                 }
                 else
                 {
-                    down = AllTiles[i + 1, j].Number;
+                    down = AllTiles[i + 1, j];
                 }
+
                 if (j == 0)
                 {
-                    left = 0;
+                    left = null;
                 }
                 else
                 {
-                    left = AllTiles[i, j - 1].Number;
+                    left = AllTiles[i, j - 1];
                 }
+
                 if (j == 3)
                 {
-                    right = 0;
+                    right = null;
                 }
                 else
                 {
-                    right = AllTiles[i, j + 1].Number;
+                    right = AllTiles[i, j + 1];
                 }
-                // step 1 input layer 2
-                AllTiles[i, j].TileAround = new int[4] { left, up, right, down };
+                AllTiles[i, j].TileAround = new Tile[4] { left, up, right, down };
 
                 // input layer 5
                 if (AllTiles[i, j].Number > 0 && AllTiles[i, j].Number <= 32)
@@ -233,8 +246,108 @@ public class GameScript4x4 : MonoBehaviour
 
                 if (AllTiles[i, j].Number == 0)
                     EmptyTiles.Add(AllTiles[i, j]);
-                
+
             }
+        }
+    }
+
+    private void GetInputLayer()
+    {
+        // step 2 & akhir input layer 2
+        SequenceTile = 0;
+        Tile tempSequenceTile = HighestTile;
+        while (tempSequenceTile != null)
+        {
+            Tile nextTempTile = null;
+            foreach (Tile item in tempSequenceTile.TileAround)
+            {
+                if (item != null)
+                {
+                    if (item.Number < tempSequenceTile.Number)
+                    {
+                        if (nextTempTile == null)
+                        {
+                            nextTempTile = item;
+                        }
+                        else if (item.Number < tempSequenceTile.Number && item.Number > nextTempTile.Number)
+                        {
+                            nextTempTile = item;
+                        }
+                    }
+                }
+            }
+            if (nextTempTile != null)
+                SequenceTile++;
+
+            tempSequenceTile = nextTempTile;
+        }
+
+        // step 2 & akhir input layer 4
+        SequenceMerge = 0;
+        Tile tempSequenceMerge = HighestTile;
+        while (tempSequenceMerge != null)
+        {
+            Tile nextTempTile = null;
+            foreach (Tile item in tempSequenceMerge.TileAround)
+            {
+                if (item != null)
+                {
+                    if (item.Number == tempSequenceMerge.Number / 2)
+                    {
+                        nextTempTile = item;
+                    }
+                }
+            }
+            if (nextTempTile != null)
+                SequenceMerge++;
+
+            tempSequenceMerge = nextTempTile;
+        }
+
+        // input layer 3
+        if (
+            (HighestTile.indRow == 0 && HighestTile.indCol == 0) ||
+            (HighestTile.indRow == 3 && HighestTile.indCol == 3) ||
+            (HighestTile.indRow == 3 && HighestTile.indCol == 0) ||
+            (HighestTile.indRow == 0 && HighestTile.indCol == 3)
+        )
+        {
+            IsHighestTileCorner = true;
+        }
+        else
+        {
+            IsHighestTileCorner = false;
+        }
+
+        // input layer 6
+        bool IsDense = true;
+        // check coloumn highest tile apakah dense
+        foreach (Tile column in columns[HighestTile.indCol])
+        {
+            if (column.Number == 0)
+            {
+                IsDense = false;
+                break;
+            }
+        }
+        // kalau di coloumn sudah dense langsung set else check row
+        if (IsDense)
+        {
+            IsHighestTileDense = IsDense;
+        }
+        else
+        {
+            IsDense = true;
+            // check ulang pada row apakah dense
+            foreach (Tile row in rows[HighestTile.indRow])
+            {
+                if (row.Number == 0)
+                {
+                    IsDense = false;
+                    break;
+                }
+            }
+            IsHighestTileDense = IsDense;
         }
     }
 
@@ -274,52 +387,14 @@ public class GameScript4x4 : MonoBehaviour
             }
             if (moveMade)
             {
-                // input layer 3
-                if (
-                    (HighestTile.indRow == 0 && HighestTile.indCol == 0) ||
-                    (HighestTile.indRow == 3 && HighestTile.indCol == 3) ||
-                    (HighestTile.indRow == 3 && HighestTile.indCol == 0) ||
-                    (HighestTile.indRow == 0 && HighestTile.indCol == 3)
-                )
-                {
-                    IsHighestTileCorner = true;
-                }
-                else
-                {
-                    IsHighestTileCorner = false;
-                }
-
-                // input layer 6
-                bool IsDense = true;
-                // check coloumn highest tile apakah dense
-                foreach (Tile column in columns[HighestTile.indCol])
-                {
-                    if (column.Number == 0)
-                    {
-                        IsDense = false;
-                        break;
-                    }
-                }
-                // kalau di coloumn sudah dense langsung set else check row
-                if (IsDense)
-                {
-                    IsHighestTileDense = IsDense;
-                }
-                else
-                {
-                    IsDense = true;
-                    // check ulang pada row apakah dense
-                    foreach (Tile row in rows[HighestTile.indRow])
-                    {
-                        if (row.Number == 0)
-                        {
-                            IsDense = false;
-                            break;
-                        }
-                    }
-                    IsHighestTileDense = IsDense;
-                }
                 UpdateEmptyTiles();
+                GetInputLayer();
+                Debug.Log("Highest Tile: " + HighestTile.Number);
+                Debug.Log("SequenceTile: " + SequenceTile);
+                Debug.Log("IsHighestTileCorner: " + IsHighestTileCorner);
+                Debug.Log("SequenceMerge: " + SequenceMerge);
+                Debug.Log("CountSmallTile: " + CountSmallTile);
+                Debug.Log("IsHighestTileDense: " + IsHighestTileDense);
                 Generate();
                 if (!CanMove())
                 {
@@ -358,7 +433,7 @@ public class GameScript4x4 : MonoBehaviour
             case MoveDirection.Left:
                 for (int i = 0; i < rows.Count; i++)
                 {
-                    StartCoroutine(MoveOneLineDownIndexCoroutine(rows[i],i));
+                    StartCoroutine(MoveOneLineDownIndexCoroutine(rows[i], i));
                 }
                 break;
             case MoveDirection.Right:
@@ -391,6 +466,13 @@ public class GameScript4x4 : MonoBehaviour
         if (moveMade)
         {
             UpdateEmptyTiles();
+            GetInputLayer();
+            Debug.Log("Highest Tile: " + HighestTile.Number);
+            Debug.Log("SequenceTile: " + SequenceTile);
+            Debug.Log("IsHighestTileCorner: "+IsHighestTileCorner);
+            Debug.Log("SequenceMerge: "+SequenceMerge);
+            Debug.Log("CountSmallTile: "+CountSmallTile);
+            Debug.Log("IsHighestTileDense: "+IsHighestTileDense);
             Generate();
             if (!CanMove())
             {
