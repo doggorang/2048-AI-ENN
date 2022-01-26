@@ -35,6 +35,9 @@ public class GameScript4x4 : MonoBehaviour
     private int CountSmallTile = 0;
     private bool IsHighestTileDense = false;
 
+    // variable untuk time
+    private float GameTime = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -184,7 +187,9 @@ public class GameScript4x4 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        GameTime += Time.deltaTime;
+        //System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
+        //Debug.Log(time.ToString(@"mm\:ss\:fff"));
     }
 
     private void ResetMergedFlags()
@@ -469,10 +474,10 @@ public class GameScript4x4 : MonoBehaviour
             GetInputLayer();
             Debug.Log("Highest Tile: " + HighestTile.Number);
             Debug.Log("SequenceTile: " + SequenceTile);
-            Debug.Log("IsHighestTileCorner: "+IsHighestTileCorner);
-            Debug.Log("SequenceMerge: "+SequenceMerge);
-            Debug.Log("CountSmallTile: "+CountSmallTile);
-            Debug.Log("IsHighestTileDense: "+IsHighestTileDense);
+            Debug.Log("IsHighestTileCorner: " + IsHighestTileCorner);
+            Debug.Log("SequenceMerge: " + SequenceMerge);
+            Debug.Log("CountSmallTile: " + CountSmallTile);
+            Debug.Log("IsHighestTileDense: " + IsHighestTileDense);
             Generate();
             if (!CanMove())
             {
