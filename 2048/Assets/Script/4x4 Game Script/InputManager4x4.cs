@@ -10,10 +10,15 @@ public enum MoveDirection
 public class InputManager4x4 : MonoBehaviour
 {
     private GameScript4x4 gm;
+    private int generation;
+    private int iterPopulation;
+    private Genetic genetic;
 
     private void Awake()
     {
         gm = GameObject.FindObjectOfType<GameScript4x4>();
+        generation = 0; iterPopulation = 0;
+        genetic = new Genetic();
     }
 
     // Start is called before the first frame update

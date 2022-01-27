@@ -21,6 +21,7 @@ public class GameScript4x4 : MonoBehaviour
 
     public Text TextDescriptionAlgorithm, TextDescriptionArchitecture;
     public Text GameOverText;
+    public Text GameTimeText;
     public GameObject GameOverPanel;
     private Tile[,] AllTiles = new Tile[4, 4];
     private List<Tile[]> columns = new List<Tile[]>();
@@ -188,8 +189,8 @@ public class GameScript4x4 : MonoBehaviour
     void Update()
     {
         GameTime += Time.deltaTime;
-        //System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
-        //Debug.Log(time.ToString(@"mm\:ss\:fff"));
+        System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
+        GameTimeText.text = time.ToString(@"mm\:ss\:fff");
     }
 
     private void ResetMergedFlags()
@@ -486,5 +487,69 @@ public class GameScript4x4 : MonoBehaviour
         }
         State = GameState.Playing;
         StopAllCoroutines();
+    }
+
+    public MoveDirection TreeSimulation(float[] Weights)
+    {
+        int[,] TempAllTiles = new int[4, 4];
+        foreach (Tile t in AllTiles)
+        {
+            TempAllTiles[t.indRow, t.indCol] = t.Number;
+        }
+
+        float Highscore = 0;
+        MoveDirection ret = MoveDirection.Left;
+        MoveDirection[] arrMD = new MoveDirection[4] { MoveDirection.Left, MoveDirection.Up, MoveDirection.Right, MoveDirection.Down };
+        foreach (MoveDirection md in arrMD)
+        {
+            float score = 0;
+            for (int i = 0; i < rows.Count; i++)
+            {
+                switch (md)
+                {
+                    case MoveDirection.Left:
+                        while (MakeOneMoveDownIndex(rows[i]))
+                            moveMade = true;
+                        break;
+                    case MoveDirection.Right:
+                        while (MakeOneMoveUpIndex(rows[i]))
+                            moveMade = true;
+                        break;
+                    case MoveDirection.Up:
+                        while (MakeOneMoveDownIndex(columns[i]))
+                            moveMade = true;
+                        break;
+                    case MoveDirection.Down:
+                        while (MakeOneMoveUpIndex(columns[i]))
+                            moveMade = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (moveMade)
+            {
+                UpdateEmptyTiles();
+                GetInputLayer();
+                // hitung score
+                score = (HighestTile.Number * Weights[0]) +
+                    (SequenceTile * Weights[1]) +
+                    ((IsHighestTileCorner ? 1 : 0) * Weights[2]) +
+                    (SequenceMerge * Weights[3]) +
+                    (CountSmallTile * Weights[4]) +
+                    ((IsHighestTileDense ? 1 : 0) * Weights[5]);
+}
+            // reset ulang map untuk kembali di simulasi
+            foreach (Tile t in AllTiles)
+            {
+                AllTiles[t.indRow, t.indCol].Number = TempAllTiles[t.indRow, t.indCol];
+            }
+            if (score > Highscore)
+            {
+                Highscore = score;
+                ret = md;
+            }
+        }
+        return ret;
     }
 }

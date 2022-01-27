@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Genetic : MonoBehaviour
 {
-    private List<Individual> Population = new List<Individual>();
+    public List<Individual> Population = new List<Individual>();
     private int populationSize = 10;
     private int generation = 0;
     public int gen

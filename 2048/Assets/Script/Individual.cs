@@ -13,11 +13,6 @@ public class Individual : MonoBehaviour
         Weights = weights;
     }
 
-    private void Awake()
-    {
-
-    }
-
     // Start is called before the first frame update
     void Start()
     {
