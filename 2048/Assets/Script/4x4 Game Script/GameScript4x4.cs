@@ -20,6 +20,7 @@ public class GameScript4x4 : MonoBehaviour
     private bool[] lineMoveComplete = new bool[4] { true, true, true, true };
 
     public Text TextDescriptionAlgorithm, TextDescriptionArchitecture;
+    public Text TextIterationPopulation, TextIterationGeneration;
     public Text GameOverText;
     public Text GameTimeText;
     public GameObject GameOverPanel;
@@ -38,12 +39,21 @@ public class GameScript4x4 : MonoBehaviour
 
     // variable untuk time
     private float GameTime = 0;
+    private Genetic genetic;
+    private WOA woa;
+    private MFO mfo;
+    private int populationSize = 10;
+    private int iterPopulation = 0;
+    private bool IsGameOver = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        Random.InitState(218116692);
+        InitAlgo(AIController.algorithm);
         TextDescriptionAlgorithm.text = "Algorithm  - <b>" + AIController.algorithm + "</b>";
         TextDescriptionArchitecture.text = "Architecture - <b>" + AIController.architecture + "</b>";
+
         Tile[] AllTilesOneDim = GameObject.FindObjectsOfType<Tile>();
         foreach (Tile t in AllTilesOneDim)
         {
@@ -62,12 +72,22 @@ public class GameScript4x4 : MonoBehaviour
         rows.Add(new Tile[] { AllTiles[2, 0], AllTiles[2, 1], AllTiles[2, 2], AllTiles[2, 3] });
         rows.Add(new Tile[] { AllTiles[3, 0], AllTiles[3, 1], AllTiles[3, 2], AllTiles[3, 3] });
         Generate(); Generate();
+        TextIterationPopulation.text = "" + iterPopulation;
     }
 
-    private void GameOver(string text)
+    private void GameOver(string text, bool IsWin = false)
     {
-        GameOverText.text = text;
-        GameOverPanel.SetActive(true);
+        IsGameOver = true;
+        if (IsWin)
+        {
+            GameOverText.text = text;
+            GameOverPanel.SetActive(true);
+        }
+        else
+        {
+            EvaluateGame(AIController.algorithm);
+            IsGameOver = false;
+        }
     }
 
     bool CanMove()
@@ -120,7 +140,7 @@ public class GameScript4x4 : MonoBehaviour
                 ScoreTracker4x4.Instance.Score += LineOfTiles[i].Number;
                 if (LineOfTiles[i].Number == 2048)
                 {
-                    GameOver("You Win");
+                    GameOver("You Win", true);
                 }
                 // input layer 1
                 if (LineOfTiles[i].Number > HighestTile.Number)
@@ -156,7 +176,7 @@ public class GameScript4x4 : MonoBehaviour
                 ScoreTracker4x4.Instance.Score += LineOfTiles[i].Number;
                 if (LineOfTiles[i].Number == 2048)
                 {
-                    GameOver("You Win");
+                    GameOver("You Win", true);
                 }
                 // input layer 1
                 if (LineOfTiles[i].Number > HighestTile.Number)
@@ -188,9 +208,16 @@ public class GameScript4x4 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GameTime += Time.deltaTime;
-        System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
-        GameTimeText.text = time.ToString(@"mm\:ss\:fff");
+        if (!IsGameOver)
+        {
+            if (State == GameState.Playing)
+            {
+                MoveTree(AIController.algorithm);
+            }
+            GameTime += Time.deltaTime;
+            System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
+            GameTimeText.text = time.ToString(@"mm\:ss\:fff");
+        }
     }
 
     private void ResetMergedFlags()
@@ -395,12 +422,6 @@ public class GameScript4x4 : MonoBehaviour
             {
                 UpdateEmptyTiles();
                 GetInputLayer();
-                Debug.Log("Highest Tile: " + HighestTile.Number);
-                Debug.Log("SequenceTile: " + SequenceTile);
-                Debug.Log("IsHighestTileCorner: " + IsHighestTileCorner);
-                Debug.Log("SequenceMerge: " + SequenceMerge);
-                Debug.Log("CountSmallTile: " + CountSmallTile);
-                Debug.Log("IsHighestTileDense: " + IsHighestTileDense);
                 Generate();
                 if (!CanMove())
                 {
@@ -473,12 +494,12 @@ public class GameScript4x4 : MonoBehaviour
         {
             UpdateEmptyTiles();
             GetInputLayer();
-            Debug.Log("Highest Tile: " + HighestTile.Number);
-            Debug.Log("SequenceTile: " + SequenceTile);
-            Debug.Log("IsHighestTileCorner: " + IsHighestTileCorner);
-            Debug.Log("SequenceMerge: " + SequenceMerge);
-            Debug.Log("CountSmallTile: " + CountSmallTile);
-            Debug.Log("IsHighestTileDense: " + IsHighestTileDense);
+            //Debug.Log("Highest Tile: " + HighestTile.Number);
+            //Debug.Log("SequenceTile: " + SequenceTile);
+            //Debug.Log("IsHighestTileCorner: " + IsHighestTileCorner);
+            //Debug.Log("SequenceMerge: " + SequenceMerge);
+            //Debug.Log("CountSmallTile: " + CountSmallTile);
+            //Debug.Log("IsHighestTileDense: " + IsHighestTileDense);
             Generate();
             if (!CanMove())
             {
@@ -503,6 +524,8 @@ public class GameScript4x4 : MonoBehaviour
         foreach (MoveDirection md in arrMD)
         {
             float score = 0;
+            moveMade = false;
+            ResetMergedFlags();
             for (int i = 0; i < rows.Count; i++)
             {
                 switch (md)
@@ -551,5 +574,71 @@ public class GameScript4x4 : MonoBehaviour
             }
         }
         return ret;
+    }
+
+    private void InitAlgo(AlgorithmOption algorithmOption)
+    {
+        if (algorithmOption == AlgorithmOption.Genetic)
+        {
+            genetic = new Genetic(populationSize);
+        }
+        else if (algorithmOption == AlgorithmOption.MFO)
+        {
+            mfo = new MFO();
+        }
+        else if (algorithmOption == AlgorithmOption.WOA)
+        {
+            woa = new WOA();
+        }
+    }
+
+    private void MoveTree(AlgorithmOption algorithmOption)
+    {
+        if (algorithmOption == AlgorithmOption.Genetic)
+        {
+            Move(TreeSimulation(genetic.Population[iterPopulation].Weights));
+        }
+        else if (algorithmOption == AlgorithmOption.MFO)
+        {
+            //Move(TreeSimulation(mfo.Population[iterPopulation].Weights));
+        }
+        else if (algorithmOption == AlgorithmOption.WOA)
+        {
+            //Move(TreeSimulation(woa.Population[iterPopulation].Weights));
+        }
+    }
+    private void EvaluateGame(AlgorithmOption algorithmOption)
+    {
+        if (algorithmOption == AlgorithmOption.Genetic)
+        {
+            genetic.Population[iterPopulation].Score = ScoreTracker4x4.Instance.Score;
+            genetic.Population[iterPopulation].HighestTile = HighestTile.Number;
+            genetic.Population[iterPopulation].GameTime = GameTime;
+            if (iterPopulation < populationSize-1)
+            {
+                TextIterationPopulation.text = "" + ++iterPopulation;
+            }
+            else
+            {
+                genetic.PrintPopulation("Tree");
+                iterPopulation = 0;
+                genetic.RePopulate();
+                TextIterationGeneration.text = "" + genetic.generation;
+            }
+            ScoreTracker4x4.Instance.Score = 0;
+            GameTime = 0;
+            columns.Clear();
+            rows.Clear();
+            EmptyTiles.Clear();
+            Start();
+        }
+        else if (algorithmOption == AlgorithmOption.MFO)
+        {
+            //mfo.PrintPopulation("Tree");
+        }
+        else if (algorithmOption == AlgorithmOption.WOA)
+        {
+            //woa.PrintPopulation("Tree");
+        }
     }
 }

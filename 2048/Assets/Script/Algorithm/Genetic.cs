@@ -1,26 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
-public class Genetic : MonoBehaviour
+public class Genetic
 {
     public List<Individual> Population = new List<Individual>();
-    private int populationSize = 10;
-    private int generation = 0;
-    public int gen
-    {
-        get
-        {
-            return generation;
-        }
-    }
+    public int populationSize;
+    public int generation;
+
     private Individual fittest, secondFittest;
     private Individual unfittest, secondUnfittest;
     private int ctrUnfittest, ctrSecondUnfittest;
-    // Start is called before the first frame update
-    void Start()
+    public Genetic(int populationSize)
     {
-        Random.InitState(218116692);
+        generation = 0;
+        this.populationSize = populationSize;
         for (int i = 0; i < populationSize; i++)
         {
             float[] tempW = new float[6];
@@ -30,8 +25,17 @@ public class Genetic : MonoBehaviour
             }
             Population.Add(new Individual(tempW));
         }
+        unfittest = Population[0];
         fittest = Population[0];
+        secondUnfittest = Population[1];
         secondFittest = Population[1];
+    }
+
+    public void RePopulate()
+    {
+        Selection();
+        Crossover();
+        Mutation();
     }
     public void Selection()
     {
@@ -110,9 +114,23 @@ public class Genetic : MonoBehaviour
         generation++;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PrintPopulation(string Architecture)
     {
-        
+        string path = Application.dataPath + "/Log/Genetic " + Architecture + ".txt";
+        string content = "";
+        for (int i = 0; i < Population.Count; i++)
+        {
+            content += "Generation: " + generation + " Population: " + i + "\nWeight: [ ";
+            foreach (float w in Population[i].Weights)
+            {
+                content += w + ", ";
+            }
+            content+="]\nFitness: "+Population[i].Fitness;
+        }
+        content += "\n";
+        if (!File.Exists(path))
+            File.WriteAllText(path, content);
+        else
+            File.AppendAllText(path, content);
     }
 }

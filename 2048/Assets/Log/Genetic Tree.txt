@@ -1,0 +1,21 @@
+Generation: 0 Population: 0
+Weight: [ 0.02043605, 0.6197916, 0.8737147, 0.9724393, 0.5523862, 0.7671202, ]
+Fitness: 0Generation: 0 Population: 1
+Weight: [ 0.05179573, 0.3589722, 0.7189392, 0.6224068, 0.4254037, 0.385586, ]
+Fitness: 0Generation: 0 Population: 2
+Weight: [ 0.9743303, 0.2515192, 0.9407959, 0.81457, 0.2186644, 0.2746573, ]
+Fitness: 0Generation: 0 Population: 3
+Weight: [ 0.2740536, 0.0408454, 0.02528036, 0.4668193, 0.4635429, 0.1121347, ]
+Fitness: 0Generation: 0 Population: 4
+Weight: [ 0.5742598, 0.4024751, 0.7557271, 0.4128324, 0.8115176, 0.8963037, ]
+Fitness: 0Generation: 0 Population: 5
+Weight: [ 0.128806, 0.8494067, 0.06257904, 0.9380102, 0.1731428, 0.4445042, ]
+Fitness: 0Generation: 0 Population: 6
+Weight: [ 0.9124005, 0.0902319, 0.4465069, 0.4673837, 0.2843482, 0.1663863, ]
+Fitness: 0Generation: 0 Population: 7
+Weight: [ 0.4332137, 0.4245077, 0.5586866, 0.2191452, 0.3361206, 0.2025746, ]
+Fitness: 0Generation: 0 Population: 8
+Weight: [ 0.06244624, 0.6139653, 0.5281398, 0.01739872, 0.8935362, 0.8818768, ]
+Fitness: 0Generation: 0 Population: 9
+Weight: [ 0.7683754, 0.092304, 0.4744783, 0.1453347, 0.7503219, 0.6893703, ]
+Fitness: 0
