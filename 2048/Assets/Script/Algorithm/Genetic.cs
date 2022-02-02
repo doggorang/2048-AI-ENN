@@ -25,16 +25,22 @@ public class Genetic
             }
             Population.Add(new Individual(tempW));
         }
-        unfittest = Population[0];
-        fittest = Population[0];
-        secondUnfittest = Population[1];
-        secondFittest = Population[1];
+        unfittest = new Individual(new float[] { 0, 0, 0, 0, 0, 0 });
+        fittest = new Individual(new float[] { 0, 0, 0, 0, 0, 0 });
+        secondUnfittest = new Individual(new float[] { 0, 0, 0, 0, 0, 0 });
+        secondFittest = new Individual(new float[] { 0, 0, 0, 0, 0, 0 });
     }
 
-    public void RePopulate()
+    public void RePopulate(string Architecture)
     {
+        // selection select sum to be parent more than 2 preffearble
         Selection();
+        PrintPopulation(Architecture);
+        // crossover sejumlah sisan total pupulation selain parent -> total population - parent.count
+        // setiap offspring akan merandom untuk memilih 2 parent dari array of parent
+        // untuk weight random 50% antara ngambil dari parent 1 atau 2
         Crossover();
+        // mutation untuk setiap offspring
         Mutation();
     }
     public void Selection()
@@ -72,8 +78,8 @@ public class Genetic
             }
         }
         // reset unfittest
-        unfittest.Weights = fittest.Weights;
-        secondUnfittest.Weights = secondFittest.Weights;
+        unfittest.Fitness = float.MaxValue;
+        secondUnfittest.Fitness = float.MaxValue;
     }
     public void Crossover()
     {
@@ -120,12 +126,12 @@ public class Genetic
         string content = "";
         for (int i = 0; i < Population.Count; i++)
         {
-            content += "Generation: " + generation + " Population: " + i + "\nWeight: [ ";
+            content += "Generation: " + generation + " Population: " + i + " Fitness: "+ Population[i].Fitness + "\nWeight: [ ";
             foreach (float w in Population[i].Weights)
             {
                 content += w + ", ";
             }
-            content+="]\nFitness: "+Population[i].Fitness;
+            content+="]\n";
         }
         content += "\n";
         if (!File.Exists(path))

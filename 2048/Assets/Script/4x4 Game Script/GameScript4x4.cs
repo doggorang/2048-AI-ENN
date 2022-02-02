@@ -42,7 +42,7 @@ public class GameScript4x4 : MonoBehaviour
     private Genetic genetic;
     private WOA woa;
     private MFO mfo;
-    private int populationSize = 10;
+    private int populationSize = 5;
     private int iterPopulation = 0;
     private bool IsGameOver = false;
 
@@ -620,9 +620,8 @@ public class GameScript4x4 : MonoBehaviour
             }
             else
             {
-                genetic.PrintPopulation("Tree");
                 iterPopulation = 0;
-                genetic.RePopulate();
+                genetic.RePopulate("Tree");
                 TextIterationGeneration.text = "" + genetic.generation;
             }
             ScoreTracker4x4.Instance.Score = 0;
