@@ -4,7 +4,8 @@ using UnityEngine;
 
 public enum MoveDirection
 {
-    Left, Right, Up, Down
+    // urutan move direction Left, Up, Right, Down
+    Left, Up, Right, Down
 }
 
 public class InputManager4x4 : MonoBehaviour
