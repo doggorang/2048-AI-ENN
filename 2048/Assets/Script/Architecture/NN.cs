@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NN : MonoBehaviour
+public class NN
 {
     // 6 input layer sesuai dengan ukuran juga
     public Matrix<float> inputLayer = Matrix<float>.Build.Dense(1, 6);
@@ -16,13 +16,8 @@ public class NN : MonoBehaviour
     // bias hidden layer
     public List<float> biases = new List<float>();
 
-    public void Initialize(int hiddenLayerCount, int hiddenNeuronCount)
+    public NN(List<float> weights, int hiddenLayerCount, int hiddenNeuronCount)
     {
-        inputLayer.Clear();
-        hiddenLayers.Clear();
-        outputLayer.Clear();
-        weights.Clear();
-        biases.Clear();
         for (int i = 0; i < hiddenLayerCount; i++)
         {
             // buat hidden layer

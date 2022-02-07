@@ -8,14 +8,18 @@ public class Genetic
     public List<Individual> Population = new List<Individual>();
     public int populationSize;
     public int generation;
+    public int currentGenome;
+    private float mutationRate = 0.055f;
+    public ArchitectureOption architecture;
 
     private Individual fittest, secondFittest;
     private Individual unfittest, secondUnfittest;
     private int ctrUnfittest, ctrSecondUnfittest;
-    public Genetic(int populationSize)
+    public Genetic(int populationSize, ArchitectureOption architecture)
     {
-        generation = 0;
+        generation = 0; currentGenome = 0;
         this.populationSize = populationSize;
+        this.architecture = architecture;
         for (int i = 0; i < populationSize; i++)
         {
             float[] tempW = new float[6];
@@ -102,13 +106,13 @@ public class Genetic
             point2 = Random.Range(0, 6);
         } while (point1 == point2);
         // kalau hasil random < 0.05 maka di mutasi
-        if (Random.value < 0.05)
+        if (Random.value < mutationRate)
         {
             float temp = fittest.Weights[point1];
             fittest.Weights[point1] = fittest.Weights[point2];
             fittest.Weights[point2] = temp;
         }
-        if (Random.value < 0.05)
+        if (Random.value < mutationRate)
         {
             float temp = secondFittest.Weights[point1];
             secondFittest.Weights[point1] = secondFittest.Weights[point2];

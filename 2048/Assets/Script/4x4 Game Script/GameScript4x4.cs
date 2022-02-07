@@ -50,7 +50,7 @@ public class GameScript4x4 : MonoBehaviour
     void Start()
     {
         Random.InitState(218116692);
-        InitAlgo(AIController.algorithm);
+        InitAlgo(AIController.algorithm, AIController.architecture);
         TextDescriptionAlgorithm.text = "Algorithm  - <b>" + AIController.algorithm + "</b>";
         TextDescriptionArchitecture.text = "Architecture - <b>" + AIController.architecture + "</b>";
 
@@ -212,7 +212,7 @@ public class GameScript4x4 : MonoBehaviour
         {
             if (State == GameState.Playing)
             {
-                MoveTree(AIController.algorithm);
+                MoveAgent(AIController.algorithm, AIController.architecture);
             }
             GameTime += Time.deltaTime;
             System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
@@ -576,11 +576,11 @@ public class GameScript4x4 : MonoBehaviour
         return ret;
     }
 
-    private void InitAlgo(AlgorithmOption algorithmOption)
+    private void InitAlgo(AlgorithmOption algorithmOption, ArchitectureOption architectureOption)
     {
         if (algorithmOption == AlgorithmOption.Genetic)
         {
-            genetic = new Genetic(populationSize);
+            genetic = new Genetic(populationSize, architectureOption);
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {
@@ -591,7 +591,17 @@ public class GameScript4x4 : MonoBehaviour
             woa = new WOA();
         }
     }
+    private void MoveAgent(AlgorithmOption algorithmOption, ArchitectureOption architectureOption)
+    {
+        if (architectureOption == ArchitectureOption.Tree)
+        {
+            MoveTree(algorithmOption);
+        }
+        else
+        {
 
+        }
+    }
     private void MoveTree(AlgorithmOption algorithmOption)
     {
         if (algorithmOption == AlgorithmOption.Genetic)
