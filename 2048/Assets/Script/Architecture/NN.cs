@@ -16,13 +16,15 @@ public class NN
     // bias hidden layer
     public List<float> biases = new List<float>();
 
-    public NN(List<float> weights, int hiddenLayerCount, int hiddenNeuronCount)
+    public NN(List<float> w, int hiddenLayerCount, int hiddenNeuronCount)
     {
+        int ctrIdxWeight = 0;
         for (int i = 0; i < hiddenLayerCount; i++)
         {
             // buat hidden layer
             hiddenLayers.Add(Matrix<float>.Build.Dense(1, hiddenNeuronCount));
-            biases.Add(Random.Range(-1f, 1f));
+            //biases.Add(Random.Range(-1f, 1f));
+            biases.Add(w[ctrIdxWeight++]);
             // i = 0 berarti weight hubungan pada input layer
             if (i == 0)
             {
@@ -35,22 +37,22 @@ public class NN
         }
         // terkahir weight untuk outptut layer
         weights.Add(Matrix<float>.Build.Dense(hiddenNeuronCount, 4));
-        biases.Add(Random.Range(-1f, 1f));
+        biases.Add(w[ctrIdxWeight++]);
 
         // Random isi weight
-        foreach (Matrix<float> w in weights)
+        foreach (Matrix<float> wei in weights)
         {
-            for (int i = 0; i < w.RowCount; i++)
+            for (int i = 0; i < wei.RowCount; i++)
             {
-                for (int j = 0; j < w.ColumnCount; j++)
+                for (int j = 0; j < wei.ColumnCount; j++)
                 {
-                    w[i, j] = Random.Range(-1f, 1f);
+                    wei[i, j] = w[ctrIdxWeight++];
                 }
             }
         }
     }
 
-    public MoveDirection Move (float il0, float il1, float il2, float il3, float il4, float il5)
+    public MoveDirection Move(float il0, float il1, float il2, float il3, float il4, float il5)
     {
         // masukin input layer
         inputLayer[0, 0] = il0;
@@ -64,29 +66,29 @@ public class NN
         hiddenLayers[0] = ((inputLayer * weights[0]) + biases[0]).PointwiseTanh();
         for (int i = 1; i < hiddenLayers.Count; i++)
         {
-            hiddenLayers[i] = ((hiddenLayers[i-1] * weights[i]) + biases[i]).PointwiseTanh();
+            hiddenLayers[i] = ((hiddenLayers[i - 1] * weights[i]) + biases[i]).PointwiseTanh();
         }
         // hitung output layer
         outputLayer = ((hiddenLayers[hiddenLayers.Count - 1] * weights[weights.Count - 1]) + biases[biases.Count - 1]).PointwiseTanh();
         // biggest score return direction
         MoveDirection ret = MoveDirection.Left;
         float score = float.MinValue;
-        if (Sigmoid(outputLayer[0,0]) > score)
+        if (Sigmoid(outputLayer[0, 0]) > score)
         {
             score = outputLayer[0, 0];
             ret = MoveDirection.Left;
         }
-        if (Sigmoid(outputLayer[0,1]) > score)
+        if (Sigmoid(outputLayer[0, 1]) > score)
         {
             score = outputLayer[0, 1];
             ret = MoveDirection.Up;
         }
-        if (Sigmoid(outputLayer[0,2]) > score)
+        if (Sigmoid(outputLayer[0, 2]) > score)
         {
             score = outputLayer[0, 2];
             ret = MoveDirection.Right;
         }
-        if (Sigmoid(outputLayer[0,3]) > score)
+        if (Sigmoid(outputLayer[0, 3]) > score)
         {
             score = outputLayer[0, 3];
             ret = MoveDirection.Down;

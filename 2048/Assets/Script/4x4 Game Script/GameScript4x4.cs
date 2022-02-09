@@ -37,14 +37,15 @@ public class GameScript4x4 : MonoBehaviour
     private int CountSmallTile = 0;
     private bool IsHighestTileDense = false;
 
-    // variable untuk time
     private float GameTime = 0;
     private Genetic genetic;
     private WOA woa;
     private MFO mfo;
-    private int populationSize = 5;
+    private int populationSize = 10;
     private int iterPopulation = 0;
     private bool IsGameOver = false;
+    private int numLayer = 1;
+    private int numNeuron = 10;
 
     // Start is called before the first frame update
     void Start()
@@ -212,7 +213,7 @@ public class GameScript4x4 : MonoBehaviour
         {
             if (State == GameState.Playing)
             {
-                MoveAgent(AIController.algorithm, AIController.architecture);
+                MoveAgent(AIController.algorithm);
             }
             GameTime += Time.deltaTime;
             System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
@@ -451,7 +452,6 @@ public class GameScript4x4 : MonoBehaviour
         }
         lineMoveComplete[index] = true;
     }
-
     IEnumerator MoveCaroutine(MoveDirection md)
     {
         State = GameState.WaitingForMoveToEnd;
@@ -510,7 +510,7 @@ public class GameScript4x4 : MonoBehaviour
         StopAllCoroutines();
     }
 
-    public MoveDirection TreeSimulation(float[] Weights)
+    public MoveDirection TreeSimulation(List<float> Weights)
     {
         int[,] TempAllTiles = new int[4, 4];
         foreach (Tile t in AllTiles)
@@ -580,7 +580,7 @@ public class GameScript4x4 : MonoBehaviour
     {
         if (algorithmOption == AlgorithmOption.Genetic)
         {
-            genetic = new Genetic(populationSize, architectureOption);
+            genetic = new Genetic(populationSize, architectureOption, numLayer, numNeuron);
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {
@@ -591,22 +591,19 @@ public class GameScript4x4 : MonoBehaviour
             woa = new WOA();
         }
     }
-    private void MoveAgent(AlgorithmOption algorithmOption, ArchitectureOption architectureOption)
+    private void MoveAgent(AlgorithmOption algorithmOption)
     {
-        if (architectureOption == ArchitectureOption.Tree)
-        {
-            MoveTree(algorithmOption);
-        }
-        else
-        {
-
-        }
-    }
-    private void MoveTree(AlgorithmOption algorithmOption)
-    {
+        MoveDirection ret = MoveDirection.Left;
         if (algorithmOption == AlgorithmOption.Genetic)
         {
-            Move(TreeSimulation(genetic.Population[iterPopulation].Weights));
+            if (genetic.architecture == ArchitectureOption.Tree)
+            {
+                ret = TreeSimulation(genetic.Population[iterPopulation].Weights);
+            }
+            else
+            {
+                ret = genetic.Population[iterPopulation].nn.Move(HighestTile.Number, SequenceTile, IsHighestTileCorner ? 1 : 0, SequenceMerge, CountSmallTile, IsHighestTileDense ? 1 : 0);
+            }
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {
@@ -616,30 +613,40 @@ public class GameScript4x4 : MonoBehaviour
         {
             //Move(TreeSimulation(woa.Population[iterPopulation].Weights));
         }
+        Move(ret);
     }
     private void EvaluateGame(AlgorithmOption algorithmOption)
     {
         if (algorithmOption == AlgorithmOption.Genetic)
         {
+            // setting achivement individual untuk nanti bantu hitung fitness
             genetic.Population[iterPopulation].Score = ScoreTracker4x4.Instance.Score;
             genetic.Population[iterPopulation].HighestTile = HighestTile.Number;
             genetic.Population[iterPopulation].GameTime = GameTime;
-            if (iterPopulation < populationSize-1)
+            // kalau iter populasi masih ada lanjut else repopulasi
+            if (iterPopulation < populationSize - 1)
             {
                 TextIterationPopulation.text = "" + ++iterPopulation;
+                Debug.Log(iterPopulation);
+                foreach (Individual i in genetic.Population)
+                {
+                    Debug.Log("HighesTile" + i.HighestTile);
+                    Debug.Log("score" + i.Score);
+                }
+                ScoreTracker4x4.Instance.Score = 0;
+                GameTime = 0;
+                columns.Clear();
+                rows.Clear();
+                EmptyTiles.Clear();
+                Start();
             }
             else
             {
                 iterPopulation = 0;
-                genetic.RePopulate("Tree");
+                genetic.RePopulate();
                 TextIterationGeneration.text = "" + genetic.generation;
             }
-            ScoreTracker4x4.Instance.Score = 0;
-            GameTime = 0;
-            columns.Clear();
-            rows.Clear();
-            EmptyTiles.Clear();
-            Start();
+            
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {

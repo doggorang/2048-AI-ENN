@@ -3,49 +3,81 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class Genetic
+public class Genetic : MonoBehaviour
 {
+    public GameScript4x4 controller;
     public List<Individual> Population = new List<Individual>();
-    public int populationSize;
-    public int generation;
-    public int currentGenome;
+    private List<Individual> Parents = new List<Individual>();
+    private List<Individual> Children = new List<Individual>();
+    private List<Individual> NewPopulation = new List<Individual>();
+    public int populationSize, generation;
     private float mutationRate = 0.055f;
+    private bool isTree; // aku simpen isTree supaya pas initialize if nya engga berat jadi langsung akses bool
+    private int IndSize; // ukuran individu karen kalo tree dan NN ukuran nya beda
+    private int numLayer, numNeuron;
     public ArchitectureOption architecture;
 
-    private Individual fittest, secondFittest;
-    private Individual unfittest, secondUnfittest;
-    private int ctrUnfittest, ctrSecondUnfittest;
-    public Genetic(int populationSize, ArchitectureOption architecture)
+    public Genetic(int populationSize, ArchitectureOption architecture, int layer = 0, int neuron = 0)
     {
-        generation = 0; currentGenome = 0;
+        generation = 0;
+        numLayer = layer; numNeuron = neuron;
         this.populationSize = populationSize;
         this.architecture = architecture;
         for (int i = 0; i < populationSize; i++)
         {
-            float[] tempW = new float[6];
-            for (int j = 0; j < 6; j++)
+            List<float> tempW = new List<float>();
+            // ctrSize ini ukuran individu kalau tree pasti 6 kalau NN harus di itung dulu
+            if (architecture == ArchitectureOption.Tree)
             {
-                tempW[j] = Random.value;
+                isTree = true; IndSize = 6;
             }
-            Population.Add(new Individual(tempW));
+            else
+            {
+                // (layer + 1)->bias + (6 * neuron)->input layer + ((layer-1)*neuron*neuron)->hidden layer + (4 * neuron)->output layer
+                IndSize = (layer + 1)+ (6 * neuron)+ ((layer - 1) * neuron * neuron)+ (4 * neuron);
+                isTree = false;
+            }
+            for (int j = 0; j < IndSize; j++)
+            {
+                float rndVal;
+                // kalau tree random nya cuma 0-1 kalau NN maka random range dari -1 sampe 1
+                if (isTree)
+                    rndVal = Random.value;
+                else
+                    rndVal = Random.Range(-1f, 1f);
+                tempW.Add(rndVal);
+            }
+            Population.Add(new Individual(tempW, architecture, layer, neuron));
         }
-        unfittest = new Individual(new float[] { 0, 0, 0, 0, 0, 0 });
-        fittest = new Individual(new float[] { 0, 0, 0, 0, 0, 0 });
-        secondUnfittest = new Individual(new float[] { 0, 0, 0, 0, 0, 0 });
-        secondFittest = new Individual(new float[] { 0, 0, 0, 0, 0, 0 });
     }
 
-    public void RePopulate(string Architecture)
+    public void RePopulate()
     {
-        // selection select sum to be parent more than 2 preffearble
-        Selection();
-        PrintPopulation(Architecture);
-        // crossover sejumlah sisan total pupulation selain parent -> total population - parent.count
-        // setiap offspring akan merandom untuk memilih 2 parent dari array of parent
-        // untuk weight random 50% antara ngambil dari parent 1 atau 2
-        Crossover();
-        // mutation untuk setiap offspring
-        Mutation();
+        foreach (Individual i in Population)
+        {
+            Debug.Log("HighesTile" + i.HighestTile);
+            Debug.Log("score" + i.Score);
+        }
+        //// selection hitung fitness lalu dapetin parents yaitu top 20% best
+        //Selection();
+        //PrintPopulation(architecture+"");
+        //// crossover akan menghasil kan 80% untuk jadi children
+        //Crossover();
+        //// children yang tercipta akan dilewatkan mutation
+        //Mutation();
+        //// insert parent and childer to current population
+        //Population.Clear();
+        //foreach (Individual p in Parents)
+        //{
+        //    Population.Add(p.InitialiseCopy(numLayer, numNeuron));
+        //}
+        //foreach (Individual c in Children)
+        //{
+        //    Population.Add(c.InitialiseCopy(numLayer, numNeuron));
+        //}
+        //generation++;
+        //// lalu list of parent dan children dan new population di kosongkan
+        //Parents.Clear(); Children.Clear(); NewPopulation.Clear();
     }
     public void Selection()
     {
@@ -54,74 +86,71 @@ public class Genetic
         foreach (Individual i in Population)
         {
             sumScore += i.Score;
+            Debug.Log("HighesTile" + i.HighestTile);
+            Debug.Log("Score" + i.Score);
         }
         // calculate every individual's fitness
         for (int i = 0; i < Population.Count; i++)
         {
             // calculate fitness highest tile saja karena saat endgame biasanya sudah berantakan jadi second highest tile dll pindah"
             Population[i].Fitness = ((Population[i].HighestTile / 2048) + (Population[i].Score / sumScore)) / 2;
-            // find parent with most fit and second fit
-            if (Population[i].Fitness > fittest.Fitness)
-            {
-                fittest.Weights = Population[i].Weights;
-            }
-            else if (Population[i].Fitness > secondFittest.Fitness)
-            {
-                secondFittest.Weights = Population[i].Weights;
-            }
-            // find position of the most unfit and second unfit to be replace by offspring after mutation
-            if (Population[i].Fitness < unfittest.Fitness)
-            {
-                unfittest.Weights = Population[i].Weights;
-                ctrUnfittest = i;
-            }
-            else if (Population[i].Fitness > secondUnfittest.Fitness)
-            {
-                secondUnfittest.Weights = Population[i].Weights;
-                ctrSecondUnfittest = i;
-            }
+            Debug.Log(Population[i].Fitness);
         }
-        // reset unfittest
-        unfittest.Fitness = float.MaxValue;
-        secondUnfittest.Fitness = float.MaxValue;
+        // sorting population untuk dapat diambil 20% top nya sebagai parent
+        Population.Sort(SortFunc);
+        for (int i = 0; i < populationSize/5; i++)
+        {
+            Parents.Add(Population[i].InitialiseCopy(numLayer, numNeuron));
+        }
     }
     public void Crossover()
     {
-        // offspring disimpan di fittest dan second fittest karena sudah tidak dipakai
-        int crossoverPoint = Random.Range(0, 6);
-        for (int i = 0; i < crossoverPoint; i++)
+        // jumlah children adalah 80% total populasi
+        int numChildren = populationSize * 4 / 5;
+        int numParents = populationSize - numChildren;
+        for (int i = 0; i < numChildren; i++)
         {
-            float temp = fittest.Weights[i];
-            fittest.Weights[i] = secondFittest.Weights[i];
-            secondFittest.Weights[i] = temp;
+            // cari random parent
+            int parent1, parent2;
+            parent1 = Random.Range(0, numParents);
+            do
+            {
+                parent2 = Random.Range(0, numParents);
+            } while (parent1 == parent2);
+
+            // weight untuk individu baru yaitu random 50/50 apakah ngambil dari parent 1 atau 2
+            List<float> newIndWeight = new List<float>();
+            for (int j = 0; j < IndSize; j++)
+            {
+                int choosenParent;
+                if (Random.value < 0.5) // kalau kurang dari 0.5 maka ambil dari parent1 else parent 2
+                    choosenParent = parent1;
+                else
+                    choosenParent = parent2;
+                newIndWeight.Add(Population[choosenParent].Weights[j]);
+            }
+            Children.Add(new Individual(newIndWeight, architecture, numLayer, numNeuron));
         }
     }
     public void Mutation()
     {
-        // use swap mutation
-        int point1, point2;
-        point1 = Random.Range(0, 6);
-        do
+        foreach (Individual Ind in Children)
         {
-            point2 = Random.Range(0, 6);
-        } while (point1 == point2);
-        // kalau hasil random < 0.05 maka di mutasi
-        if (Random.value < mutationRate)
-        {
-            float temp = fittest.Weights[point1];
-            fittest.Weights[point1] = fittest.Weights[point2];
-            fittest.Weights[point2] = temp;
+            // pakai cara swap mutation
+            int point1, point2;
+            point1 = Random.Range(0, IndSize);
+            do
+            {
+                point2 = Random.Range(0, IndSize);
+            } while (point1 == point2);
+            // kalau hasil random < dari mutationRate maka di mutasi akan dilakukan
+            if (Random.value < mutationRate)
+            {
+                float temp = Ind.Weights[point1];
+                Ind.Weights[point1] = Ind.Weights[point2];
+                Ind.Weights[point2] = temp;
+            }
         }
-        if (Random.value < mutationRate)
-        {
-            float temp = secondFittest.Weights[point1];
-            secondFittest.Weights[point1] = secondFittest.Weights[point2];
-            secondFittest.Weights[point2] = temp;
-        }
-        // insert offspring ke population
-        Population[ctrUnfittest].Weights = fittest.Weights;
-        Population[ctrSecondUnfittest].Weights = secondFittest.Weights;
-        generation++;
     }
 
     public void PrintPopulation(string Architecture)
@@ -142,5 +171,18 @@ public class Genetic
             File.WriteAllText(path, content);
         else
             File.AppendAllText(path, content);
+    }
+
+    private int SortFunc(Individual a, Individual b)
+    {
+        if (a.Fitness < b.Fitness)
+        {
+            return -1;
+        }
+        else if (a.Fitness > b.Fitness)
+        {
+            return 1;
+        }
+        return 0;
     }
 }

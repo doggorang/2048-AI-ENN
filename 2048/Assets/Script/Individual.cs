@@ -10,17 +10,19 @@ public class Individual
     public float GameTime = 0;
     public List<float> Weights = new List<float>();
     public NN nn;
-    public A_Tree tree;
-    public Individual(List<float> weights, ArchitectureOption ao, int layer=0, int neuron=0)
+    private ArchitectureOption ao;
+    public Individual(List<float> weights, ArchitectureOption ao, int layer = 0, int neuron = 0)
     {
-        Weights = weights;
+        Weights = weights; this.ao = ao;
         if (ao == ArchitectureOption.NN)
         {
-
+            nn = new NN(weights, layer, neuron);
         }
-        else
-        {
+    }
 
-        }
+    public Individual InitialiseCopy(int layer = 0, int neuron = 0)
+    {
+        Individual i = new Individual(this.Weights, this.ao, layer, neuron);
+        return i;
     }
 }
