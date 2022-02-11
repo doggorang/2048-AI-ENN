@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum GameState
-{
-    Playing,
-    GameOver,
-    WaitingForMoveToEnd
-}
-
 public class GameScript4x4 : MonoBehaviour
 {
     public GameState State;

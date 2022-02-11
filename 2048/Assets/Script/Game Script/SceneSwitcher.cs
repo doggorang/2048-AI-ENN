@@ -4,6 +4,19 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum GameState
+{
+    Playing,
+    GameOver,
+    WaitingForMoveToEnd
+}
+
+public enum MoveDirection
+{
+    // urutan move direction Left, Up, Right, Down
+    Left, Up, Right, Down
+}
+
 public class SceneSwitcher : MonoBehaviour
 {
     public void PlayGameStage1()

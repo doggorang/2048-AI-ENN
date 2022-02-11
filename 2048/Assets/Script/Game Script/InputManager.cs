@@ -2,19 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManager4x4 : MonoBehaviour
+public class InputManager : MonoBehaviour
 {
-    private GameScript4x4 gm;
-
-    private void Awake()
-    {
-        gm = GameObject.FindObjectOfType<GameScript4x4>();
-    }
-
+    private GameScript gm;
     // Start is called before the first frame update
     void Start()
     {
-        
+        gm = GameObject.FindObjectOfType<GameScript>();
     }
 
     // Update is called once per frame
