@@ -52,7 +52,7 @@ public class NN
         }
     }
 
-    public MoveDirection Move(float il0, float il1, float il2, float il3, float il4, float il5)
+    public MoveDirection[] Move(float il0, float il1, float il2, float il3, float il4, float il5)
     {
         // masukin input layer
         inputLayer[0, 0] = il0;
@@ -71,27 +71,25 @@ public class NN
         // hitung output layer
         outputLayer = ((hiddenLayers[hiddenLayers.Count - 1] * weights[weights.Count - 1]) + biases[biases.Count - 1]).PointwiseTanh();
         // biggest score return direction
-        MoveDirection ret = MoveDirection.Left;
-        float score = float.MinValue;
-        if (Sigmoid(outputLayer[0, 0]) > score)
+        MoveDirection[] ret = new MoveDirection[4] { MoveDirection.Left, MoveDirection.Up, MoveDirection.Right, MoveDirection.Down };
+        float[] score = new float[4] { Sigmoid(outputLayer[0, 0]), Sigmoid(outputLayer[0, 1]),Sigmoid(outputLayer[0, 2]),Sigmoid(outputLayer[0, 3]) };
+        // sorting sesuai order score dan move direction
+        for (int i = 0; i < 4; i++)
         {
-            score = outputLayer[0, 0];
-            ret = MoveDirection.Left;
-        }
-        if (Sigmoid(outputLayer[0, 1]) > score)
-        {
-            score = outputLayer[0, 1];
-            ret = MoveDirection.Up;
-        }
-        if (Sigmoid(outputLayer[0, 2]) > score)
-        {
-            score = outputLayer[0, 2];
-            ret = MoveDirection.Right;
-        }
-        if (Sigmoid(outputLayer[0, 3]) > score)
-        {
-            score = outputLayer[0, 3];
-            ret = MoveDirection.Down;
+            for (int j = 0; j < 3-i; j++)
+            {
+                if (score[j] > score[j+1])
+                {
+                    float temp = score[j];
+                    MoveDirection tempMd = ret[j];
+
+                    score[j] = score[j + 1];
+                    ret[j] = ret[j + 1];
+
+                    score[j + 1] = temp;
+                    ret[j + 1] = tempMd;
+                }
+            }
         }
         return ret;
     }

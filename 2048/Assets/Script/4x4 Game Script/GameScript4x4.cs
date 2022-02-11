@@ -13,7 +13,7 @@ public enum GameState
 public class GameScript4x4 : MonoBehaviour
 {
     public GameState State;
-    [Range(0, 2f)]
+    [Range(0, 0.5f)]
     public float delay;
     private bool moveMade;
     // bolean to check if move is done because it has delay so it doesnt move around
@@ -54,7 +54,16 @@ public class GameScript4x4 : MonoBehaviour
         InitAlgo(AIController.algorithm, AIController.architecture);
         TextDescriptionAlgorithm.text = "Algorithm  - <b>" + AIController.algorithm + "</b>";
         TextDescriptionArchitecture.text = "Architecture - <b>" + AIController.architecture + "</b>";
+        RestartGame();
+    }
 
+    private void RestartGame()
+    {
+        ScoreTracker4x4.Instance.Score = 0;
+        GameTime = 0;
+        columns.Clear();
+        rows.Clear();
+        EmptyTiles.Clear();
         Tile[] AllTilesOneDim = GameObject.FindObjectsOfType<Tile>();
         foreach (Tile t in AllTilesOneDim)
         {
@@ -510,7 +519,7 @@ public class GameScript4x4 : MonoBehaviour
         StopAllCoroutines();
     }
 
-    public MoveDirection TreeSimulation(List<float> Weights)
+    private MoveDirection TreeSimulation(List<float> Weights)
     {
         int[,] TempAllTiles = new int[4, 4];
         foreach (Tile t in AllTiles)
@@ -575,6 +584,56 @@ public class GameScript4x4 : MonoBehaviour
         }
         return ret;
     }
+    private MoveDirection NNSimulation(Individual Ind)
+    {
+        int[,] TempAllTiles = new int[4, 4];
+        foreach (Tile t in AllTiles)
+        {
+            TempAllTiles[t.indRow, t.indCol] = t.Number;
+        }
+        MoveDirection ret = MoveDirection.Left;
+        MoveDirection[] arrMD = Ind.nn.Move(HighestTile.Number, SequenceTile, IsHighestTileCorner ? 1 : 0, SequenceMerge, CountSmallTile, IsHighestTileDense ? 1 : 0);
+        foreach (MoveDirection md in arrMD)
+        {
+            moveMade = false;
+            ResetMergedFlags();
+            for (int i = 0; i < rows.Count; i++)
+            {
+                switch (md)
+                {
+                    case MoveDirection.Left:
+                        while (MakeOneMoveDownIndex(rows[i]))
+                            moveMade = true;
+                        break;
+                    case MoveDirection.Right:
+                        while (MakeOneMoveUpIndex(rows[i]))
+                            moveMade = true;
+                        break;
+                    case MoveDirection.Up:
+                        while (MakeOneMoveDownIndex(columns[i]))
+                            moveMade = true;
+                        break;
+                    case MoveDirection.Down:
+                        while (MakeOneMoveUpIndex(columns[i]))
+                            moveMade = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            // reset ulang map
+            foreach (Tile t in AllTiles)
+            {
+                AllTiles[t.indRow, t.indCol].Number = TempAllTiles[t.indRow, t.indCol];
+            }
+            if (moveMade)
+            {
+                ret = md;
+                break;
+            }
+        }
+        return ret;
+    }
 
     private void InitAlgo(AlgorithmOption algorithmOption, ArchitectureOption architectureOption)
     {
@@ -602,7 +661,7 @@ public class GameScript4x4 : MonoBehaviour
             }
             else
             {
-                ret = genetic.Population[iterPopulation].nn.Move(HighestTile.Number, SequenceTile, IsHighestTileCorner ? 1 : 0, SequenceMerge, CountSmallTile, IsHighestTileDense ? 1 : 0);
+                ret = NNSimulation(genetic.Population[iterPopulation]);
             }
         }
         else if (algorithmOption == AlgorithmOption.MFO)
@@ -627,18 +686,6 @@ public class GameScript4x4 : MonoBehaviour
             if (iterPopulation < populationSize - 1)
             {
                 TextIterationPopulation.text = "" + ++iterPopulation;
-                Debug.Log(iterPopulation);
-                foreach (Individual i in genetic.Population)
-                {
-                    Debug.Log("HighesTile" + i.HighestTile);
-                    Debug.Log("score" + i.Score);
-                }
-                ScoreTracker4x4.Instance.Score = 0;
-                GameTime = 0;
-                columns.Clear();
-                rows.Clear();
-                EmptyTiles.Clear();
-                Start();
             }
             else
             {
@@ -646,7 +693,7 @@ public class GameScript4x4 : MonoBehaviour
                 genetic.RePopulate();
                 TextIterationGeneration.text = "" + genetic.generation;
             }
-            
+            RestartGame();
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {

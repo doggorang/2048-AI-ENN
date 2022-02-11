@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class Genetic : MonoBehaviour
+public class Genetic
 {
     public GameScript4x4 controller;
     public List<Individual> Population = new List<Individual>();
@@ -53,31 +53,26 @@ public class Genetic : MonoBehaviour
 
     public void RePopulate()
     {
-        foreach (Individual i in Population)
+        // selection hitung fitness lalu dapetin parents yaitu top 20% best
+        Selection();
+        PrintPopulation(architecture + "");
+        // crossover akan menghasil kan 80% untuk jadi children
+        Crossover();
+        // children yang tercipta akan dilewatkan mutation
+        Mutation();
+        // insert parent and childer to current population
+        Population.Clear();
+        foreach (Individual p in Parents)
         {
-            Debug.Log("HighesTile" + i.HighestTile);
-            Debug.Log("score" + i.Score);
+            Population.Add(p.InitialiseCopy(numLayer, numNeuron));
         }
-        //// selection hitung fitness lalu dapetin parents yaitu top 20% best
-        //Selection();
-        //PrintPopulation(architecture+"");
-        //// crossover akan menghasil kan 80% untuk jadi children
-        //Crossover();
-        //// children yang tercipta akan dilewatkan mutation
-        //Mutation();
-        //// insert parent and childer to current population
-        //Population.Clear();
-        //foreach (Individual p in Parents)
-        //{
-        //    Population.Add(p.InitialiseCopy(numLayer, numNeuron));
-        //}
-        //foreach (Individual c in Children)
-        //{
-        //    Population.Add(c.InitialiseCopy(numLayer, numNeuron));
-        //}
-        //generation++;
-        //// lalu list of parent dan children dan new population di kosongkan
-        //Parents.Clear(); Children.Clear(); NewPopulation.Clear();
+        foreach (Individual c in Children)
+        {
+            Population.Add(c.InitialiseCopy(numLayer, numNeuron));
+        }
+        generation++;
+        // lalu list of parent dan children dan new population di kosongkan
+        Parents.Clear(); Children.Clear(); NewPopulation.Clear();
     }
     public void Selection()
     {
@@ -86,16 +81,15 @@ public class Genetic : MonoBehaviour
         foreach (Individual i in Population)
         {
             sumScore += i.Score;
-            Debug.Log("HighesTile" + i.HighestTile);
-            Debug.Log("Score" + i.Score);
         }
         // calculate every individual's fitness
         for (int i = 0; i < Population.Count; i++)
         {
             // calculate fitness highest tile saja karena saat endgame biasanya sudah berantakan jadi second highest tile dll pindah"
-            Population[i].Fitness = ((Population[i].HighestTile / 2048) + (Population[i].Score / sumScore)) / 2;
-            Debug.Log(Population[i].Fitness);
+            float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)sumScore)) / 2;
+            Population[i].Fitness = temp;
         }
+
         // sorting population untuk dapat diambil 20% top nya sebagai parent
         Population.Sort(SortFunc);
         for (int i = 0; i < populationSize/5; i++)
