@@ -2740,8 +2740,8 @@ GameObject:
   - component: {fileID: 642862717}
   - component: {fileID: 642862716}
   - component: {fileID: 642862720}
-  - component: {fileID: 642862723}
-  - component: {fileID: 642862722}
+  - component: {fileID: 642862726}
+  - component: {fileID: 642862725}
   - component: {fileID: 642862721}
   - component: {fileID: 642862724}
   m_Layer: 5
@@ -2962,39 +2962,6 @@ MonoBehaviour:
     text_color:
       serializedVersion: 2
       rgba: 15922937
---- !u!114 &642862722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 642862715}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d28d0f52552104f4fba9596fe399e5ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &642862723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 642862715}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcc017900d46a5e4fa4abefc3b935409, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  State: 0
-  delay: 0.015
-  TextDescriptionAlgorithm: {fileID: 838808364}
-  TextDescriptionArchitecture: {fileID: 586291550}
-  TextIterationPopulation: {fileID: 406683819}
-  TextIterationGeneration: {fileID: 728896010}
-  GameOverText: {fileID: 1740297835}
-  GameTimeText: {fileID: 876171450}
-  GameOverPanel: {fileID: 2025762648}
 --- !u!114 &642862724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3004,11 +2971,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 642862715}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0134f89ea8e6254bb764aa2d7396a27, type: 3}
+  m_Script: {fileID: 11500000, guid: 54b3035ee5be139438a76934fe1d0cc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ScoreText: {fileID: 1349252604}
   HighScoreText: {fileID: 1507972173}
+--- !u!114 &642862725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642862715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8667efb5c7ce4544ba83a94cf213f8c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &642862726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642862715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea014b23e8527854e824c8f0fe87b194, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  State: 0
+  delay: 0.015
+  mapSize: 4
+  TextDescriptionAlgorithm: {fileID: 838808364}
+  TextDescriptionArchitecture: {fileID: 586291550}
+  TextIterationPopulation: {fileID: 406683819}
+  TextIterationGeneration: {fileID: 728896010}
+  GameOverText: {fileID: 1740297835}
+  GameTimeText: {fileID: 876171450}
+  GameOverPanel: {fileID: 2025762648}
 --- !u!1 &655949096
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,6 @@ using System.IO;
 
 public class Genetic
 {
-    public GameScript4x4 controller;
     public List<Individual> Population = new List<Individual>();
     private List<Individual> Parents = new List<Individual>();
     private List<Individual> Children = new List<Individual>();
