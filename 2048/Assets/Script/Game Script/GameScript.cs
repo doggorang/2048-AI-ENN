@@ -196,11 +196,11 @@ public class GameScript : MonoBehaviour
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {
-            mfo = new MFO();
+            mfo = new MFO(populationSize, architectureOption, numLayer, numNeuron);
         }
         else if (algorithmOption == AlgorithmOption.WOA)
         {
-            woa = new WOA();
+            woa = new WOA(populationSize, architectureOption, numLayer, numNeuron);
         }
     }
     private void MoveAgent(AlgorithmOption algorithmOption)
