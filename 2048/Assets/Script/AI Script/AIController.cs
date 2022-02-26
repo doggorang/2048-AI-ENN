@@ -48,4 +48,17 @@ public class AIController : MonoBehaviour
                 break;
         }
     }
+
+    public static int SortFunc(Individual a, Individual b)
+    {
+        if (a.Fitness < b.Fitness)
+        {
+            return -1;
+        }
+        else if (a.Fitness > b.Fitness)
+        {
+            return 1;
+        }
+        return 0;
+    }
 }

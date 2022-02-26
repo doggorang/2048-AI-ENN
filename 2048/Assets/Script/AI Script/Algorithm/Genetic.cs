@@ -25,7 +25,7 @@ public class Genetic
         for (int i = 0; i < populationSize; i++)
         {
             List<float> tempW = new List<float>();
-            // ctrSize ini ukuran individu kalau tree pasti 6 kalau NN harus di itung dulu
+            // IndSize ini ukuran individu kalau tree pasti 6 kalau NN harus di itung dulu
             if (architecture == ArchitectureOption.Tree)
             {
                 isTree = true; IndSize = 6;
@@ -73,7 +73,7 @@ public class Genetic
         // lalu list of parent dan children dan new population di kosongkan
         Parents.Clear(); Children.Clear(); NewPopulation.Clear();
     }
-    public void Selection()
+    private void Selection()
     {
         // get the sum score to be used in fitness calculation
         int sumScore = 0;
@@ -90,13 +90,13 @@ public class Genetic
         }
 
         // sorting population untuk dapat diambil 20% top nya sebagai parent
-        Population.Sort(SortFunc);
+        Population.Sort(AIController.SortFunc);
         for (int i = 0; i < populationSize/5; i++)
         {
             Parents.Add(Population[i].InitialiseCopy(numLayer, numNeuron));
         }
     }
-    public void Crossover()
+    private void Crossover()
     {
         // jumlah children adalah 80% total populasi
         int numChildren = populationSize * 4 / 5;
@@ -125,7 +125,7 @@ public class Genetic
             Children.Add(new Individual(newIndWeight, architecture, numLayer, numNeuron));
         }
     }
-    public void Mutation()
+    private void Mutation()
     {
         foreach (Individual Ind in Children)
         {
@@ -164,18 +164,5 @@ public class Genetic
             File.WriteAllText(path, content);
         else
             File.AppendAllText(path, content);
-    }
-
-    private int SortFunc(Individual a, Individual b)
-    {
-        if (a.Fitness < b.Fitness)
-        {
-            return -1;
-        }
-        else if (a.Fitness > b.Fitness)
-        {
-            return 1;
-        }
-        return 0;
     }
 }

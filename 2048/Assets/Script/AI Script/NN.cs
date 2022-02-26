@@ -39,7 +39,7 @@ public class NN
         weights.Add(Matrix<float>.Build.Dense(hiddenNeuronCount, 4));
         biases.Add(w[ctrIdxWeight++]);
 
-        // Random isi weight
+        // Isi weight sesuai dari parameter
         foreach (Matrix<float> wei in weights)
         {
             for (int i = 0; i < wei.RowCount; i++)
