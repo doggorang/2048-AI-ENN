@@ -61,6 +61,7 @@ public class NN
         inputLayer[0, 3] = il3;
         inputLayer[0, 4] = il4;
         inputLayer[0, 5] = il5;
+        // PointwiseTanh supaya hasil angkanya nanti range -1 sampai 1 sedangkan digmoid supaya hasil angkanya 0 sampai 1
         inputLayer = inputLayer.PointwiseTanh();
         // hitung hidden layer
         hiddenLayers[0] = ((inputLayer * weights[0]) + biases[0]).PointwiseTanh();
