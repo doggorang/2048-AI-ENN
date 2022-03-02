@@ -219,11 +219,19 @@ public class GameScript : MonoBehaviour
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {
+
             //Move(TreeSimulation(mfo.Population[iterPopulation].Weights));
         }
         else if (algorithmOption == AlgorithmOption.WOA)
         {
-            //Move(TreeSimulation(woa.Population[iterPopulation].Weights));
+            if (woa.architecture == ArchitectureOption.Tree)
+            {
+                ret = TreeSimulation(genetic.Population[iterPopulation].Weights);
+            }
+            else
+            {
+                ret = NNSimulation(genetic.Population[iterPopulation]);
+            }
         }
         Move(ret);
     }
@@ -254,7 +262,22 @@ public class GameScript : MonoBehaviour
         }
         else if (algorithmOption == AlgorithmOption.WOA)
         {
-            //woa.PrintPopulation("Tree");
+            // setting achivement individual untuk nanti bantu hitung fitness
+            woa.Population[iterPopulation].Score = ScoreTracker.Instance.Score;
+            woa.Population[iterPopulation].HighestTile = HighestTile.Number;
+            woa.Population[iterPopulation].GameTime = GameTime;
+            // kalau iter populasi masih ada lanjut else repopulasi
+            if (iterPopulation < populationSize - 1)
+            {
+                TextIterationPopulation.text = "" + ++iterPopulation;
+            }
+            else
+            {
+                iterPopulation = 0;
+                woa.Optimize();
+                TextIterationGeneration.text = "" + woa.generation;
+            }
+            RestartGame();
         }
     }
 

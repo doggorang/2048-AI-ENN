@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class WOA
@@ -70,6 +71,7 @@ public class WOA
 
         // sorting population
         Population.Sort(AIController.SortFunc);
+        PrintPopulation(architecture + "");
         Individual best = Population[0];
         NewPopulation.Add(best.InitialiseCopy(numLayer, numNeuron));
         foreach (Individual sol in Population)
@@ -152,5 +154,25 @@ public class WOA
         float temp_A = 2.0f * a * Random.value - a;
         float ret_A = Mathf.Abs(temp_A);
         return ret_A;
+    }
+
+    public void PrintPopulation(string Architecture)
+    {
+        string path = Application.dataPath + "/Log/WOA " + Architecture + ".txt";
+        string content = "";
+        for (int i = 0; i < Population.Count; i++)
+        {
+            content += "Generation: " + generation + " Population: " + i + " Fitness: " + Population[i].Fitness + "\nWeight: [ ";
+            foreach (float w in Population[i].Weights)
+            {
+                content += w + ", ";
+            }
+            content += "]\n";
+        }
+        content += "\n";
+        if (!File.Exists(path))
+            File.WriteAllText(path, content);
+        else
+            File.AppendAllText(path, content);
     }
 }
