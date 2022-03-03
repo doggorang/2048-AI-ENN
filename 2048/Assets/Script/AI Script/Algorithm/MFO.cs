@@ -14,7 +14,9 @@ public class MFO
     private int numLayer, numNeuron;
     public ArchitectureOption architecture;
 
-    private float a, FlameNo;
+    private float ngens = 20.0f; // number of max generations
+    private float a;
+    private int FlameNo;
 
     public MFO(int populationSize, ArchitectureOption architecture, int layer = 0, int neuron = 0)
     {
@@ -61,15 +63,49 @@ public class MFO
         {
             PreviousPopulation.Add(Ind.InitialiseCopy(numLayer, numNeuron));
         }
-        // Update the position of best flame obtained so far
 
-        // a linearly dicreases from -1 to -2 to calculate t in Eq. (3.12)
-        //a = -1.0f + (float)(iteration + 1) * (-1.0f / (float)maxIterations_);
-        //FlameNo = round((searchAgentsCount_ - 1) - (iteration + 1) * ((float)(searchAgentsCount_ - 1) / (float)maxIterations_));
+        // a nanti akan digunakan untuk menghitung t yang ada di Eq. (3.12)
+        a = -1.0f + (float)(generation + 1) * (-1.0f / ngens);
+        // FlameNo digunakan dalam metode update posisi sesuai Eq. (3.14)
+        FlameNo = Mathf.RoundToInt((populationSize - 1) - (generation + 1) * ((float)(populationSize - 1) / (float)ngens));
+        updatePosition();
+    }
+    private void updatePosition()
+    {
+        float distanceToFlame, t;
+        float b = 1.0f;
+        List<Individual> TempPopulation = new List<Individual>();
+        for (int agentIndex = 0; agentIndex < populationSize; agentIndex++)
+        {
+            List<float> bestFlamesVariables = new List<float>();
+            if (agentIndex <= FlameNo)
+            {
+                // jika index < FlameNo maka pakai agentIndex sebagai pacuan flame untuk mengubah posisi
+                bestFlamesVariables = new List<float>(BestFlames[agentIndex].Weights);
+            }
+            else
+            {
+                // else  maka pakai index FlameNo sebagai pacuan flame untuk mengubah posisi
+                bestFlamesVariables = new List<float>(BestFlames[FlameNo].Weights);
+            }
 
-        //updatePosition(a, FlameNo);
-
-        //convergenceCurve_[iteration] = bestFlames_->get(0)->getObjective(0);
+            List<float> newIndWeight = new List<float>();
+            for (int j = 0; j < IndSize; j++)
+            {
+                // D in Eq. (3.13)
+                distanceToFlame = Mathf.Abs(bestFlamesVariables[j] - Population[agentIndex].Weights[j]);
+                // t yang ada di Eq. (3.12)
+                t = (a - 1.0f) * Random.value + 1.0f;
+                newIndWeight.Add(distanceToFlame * Mathf.Exp(b * t) * Mathf.Cos(t * 2.0f * Mathf.PI) + bestFlamesVariables[j]);
+            }
+            TempPopulation.Add(new Individual(newIndWeight, architecture, numLayer, numNeuron));
+        }
+        Population.Clear();
+        foreach (Individual p in TempPopulation)
+        {
+            Population.Add(p.InitialiseCopy(numLayer, numNeuron));
+        }
+        generation++;
     }
     private void CalculateFitness()
     {
