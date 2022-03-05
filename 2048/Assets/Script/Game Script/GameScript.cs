@@ -192,15 +192,15 @@ public class GameScript : MonoBehaviour
     {
         if (algorithmOption == AlgorithmOption.Genetic)
         {
-            genetic = new Genetic(populationSize, architectureOption, numLayer, numNeuron);
+            genetic = new Genetic(populationSize, architectureOption, mapSize, numLayer, numNeuron);
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {
-            mfo = new MFO(populationSize, architectureOption, numLayer, numNeuron);
+            mfo = new MFO(populationSize, architectureOption, mapSize, numLayer, numNeuron);
         }
         else if (algorithmOption == AlgorithmOption.WOA)
         {
-            woa = new WOA(populationSize, architectureOption, numLayer, numNeuron);
+            woa = new WOA(populationSize, architectureOption, mapSize, numLayer, numNeuron);
         }
     }
     private void MoveAgent(AlgorithmOption algorithmOption)
@@ -258,7 +258,22 @@ public class GameScript : MonoBehaviour
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {
-            //mfo.PrintPopulation("Tree");
+            // setting achivement individual untuk nanti bantu hitung fitness
+            mfo.Population[iterPopulation].Score = ScoreTracker.Instance.Score;
+            mfo.Population[iterPopulation].HighestTile = HighestTile.Number;
+            mfo.Population[iterPopulation].GameTime = GameTime;
+            // kalau iter populasi masih ada lanjut else repopulasi
+            if (iterPopulation < populationSize - 1)
+            {
+                TextIterationPopulation.text = "" + ++iterPopulation;
+            }
+            else
+            {
+                iterPopulation = 0;
+                mfo.UpdateMothPosition();
+                TextIterationGeneration.text = "" + mfo.generation;
+            }
+            RestartGame();
         }
         else if (algorithmOption == AlgorithmOption.WOA)
         {
@@ -278,6 +293,37 @@ public class GameScript : MonoBehaviour
                 TextIterationGeneration.text = "" + woa.generation;
             }
             RestartGame();
+        }
+    }
+    private void EvaluateWinGame(AlgorithmOption algorithmOption)
+    {
+        // kalau win lanjut map selanjutnya pakai ulang dari awal & print population juga nama sesuai dengan map size nya
+        if (algorithmOption == AlgorithmOption.Genetic)
+        {
+            // setting achivement individual untuk nanti bantu hitung fitness
+            genetic.Population[iterPopulation].Score = ScoreTracker.Instance.Score;
+            genetic.Population[iterPopulation].HighestTile = HighestTile.Number;
+            genetic.Population[iterPopulation].GameTime = GameTime;
+
+            //genetic.PrintPopulation(AIController.architecture);
+        }
+        else if (algorithmOption == AlgorithmOption.MFO)
+        {
+            // setting achivement individual untuk nanti bantu hitung fitness
+            mfo.Population[iterPopulation].Score = ScoreTracker.Instance.Score;
+            mfo.Population[iterPopulation].HighestTile = HighestTile.Number;
+            mfo.Population[iterPopulation].GameTime = GameTime;
+
+            //mfo.PrintPopulation(AIController.architecture);
+        }
+        else if (algorithmOption == AlgorithmOption.WOA)
+        {
+            // setting achivement individual untuk nanti bantu hitung fitness
+            woa.Population[iterPopulation].Score = ScoreTracker.Instance.Score;
+            woa.Population[iterPopulation].HighestTile = HighestTile.Number;
+            woa.Population[iterPopulation].GameTime = GameTime;
+
+            //woa.PrintPopulation(AIController.architecture);
         }
     }
 
@@ -592,6 +638,7 @@ public class GameScript : MonoBehaviour
         {
             GameOverText.text = text;
             GameOverPanel.SetActive(true);
+            EvaluateWinGame(AIController.algorithm);
         }
         else
         {

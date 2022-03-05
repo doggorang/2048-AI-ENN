@@ -7,7 +7,7 @@ public class WOA
 {
     public List<Individual> Population = new List<Individual>();
     private List<Individual> NewPopulation = new List<Individual>();
-    public int populationSize, generation;
+    public int populationSize, generation, mapSize;
     private bool isTree; // aku simpen isTree supaya pas initialize if nya engga berat jadi langsung akses bool
     private int IndSize; // ukuran individu karen kalo tree dan NN ukuran nya beda
     private int numLayer, numNeuron;
@@ -18,11 +18,12 @@ public class WOA
     private float a_step; // didapat dari hasil perhitungan yaitu step pengurangan a dari 2 sampai 0
     private float ngens = 20.0f; // number of max generations
 
-    public WOA(int populationSize, ArchitectureOption architecture, int layer = 0, int neuron = 0)
+    public WOA(int populationSize, ArchitectureOption architecture, int mapSize, int layer = 0, int neuron = 0)
     {
         generation = 0;
         a_step = a / ngens;
         numLayer = layer; numNeuron = neuron;
+        this.mapSize = mapSize;
         this.populationSize = populationSize;
         this.architecture = architecture;
         for (int i = 0; i < populationSize; i++)
@@ -55,20 +56,7 @@ public class WOA
 
     public void Optimize()
     {
-        // get the sum score to be used in fitness calculation
-        int sumScore = 0;
-        foreach (Individual i in Population)
-        {
-            sumScore += i.Score;
-        }
-        // calculate every individual's fitness
-        for (int i = 0; i < Population.Count; i++)
-        {
-            // calculate fitness highest tile saja karena saat endgame biasanya sudah berantakan jadi second highest tile dll pindah"
-            float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)sumScore)) / 2;
-            Population[i].Fitness = temp;
-        }
-
+        CalculateFitness();
         // sorting population
         Population.Sort(AIController.SortFunc);
         PrintPopulation(architecture + "");
@@ -107,6 +95,22 @@ public class WOA
         generation++;
         a -= a_step;
         NewPopulation.Clear();
+    }
+    private void CalculateFitness()
+    {
+        // get the sum score to be used in fitness calculation
+        int sumScore = 0;
+        foreach (Individual i in Population)
+        {
+            sumScore += i.Score;
+        }
+        // calculate every individual's fitness
+        for (int i = 0; i < Population.Count; i++)
+        {
+            // calculate fitness highest tile saja karena saat endgame biasanya sudah berantakan jadi second highest tile dll pindah"
+            float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)sumScore)) / 2;
+            Population[i].Fitness = temp;
+        }
     }
 
     private void Encircle(Individual i, Individual best, float A, float C)
@@ -158,7 +162,7 @@ public class WOA
 
     public void PrintPopulation(string Architecture)
     {
-        string path = Application.dataPath + "/Log/WOA " + Architecture + ".txt";
+        string path = $"{Application.dataPath}/Log/WOA {Architecture} {mapSize}x{mapSize}.txt";
         string content = "";
         for (int i = 0; i < Population.Count; i++)
         {

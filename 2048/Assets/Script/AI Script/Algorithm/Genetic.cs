@@ -9,17 +9,18 @@ public class Genetic
     private List<Individual> Parents = new List<Individual>();
     private List<Individual> Children = new List<Individual>();
     private List<Individual> NewPopulation = new List<Individual>();
-    public int populationSize, generation;
+    public int populationSize, generation, mapSize;
     private float mutationRate = 0.055f;
     private bool isTree; // aku simpen isTree supaya pas initialize if nya engga berat jadi langsung akses bool
     private int IndSize; // ukuran individu karen kalo tree dan NN ukuran nya beda
     private int numLayer, numNeuron;
     public ArchitectureOption architecture;
 
-    public Genetic(int populationSize, ArchitectureOption architecture, int layer = 0, int neuron = 0)
+    public Genetic(int populationSize, ArchitectureOption architecture, int mapSize, int layer = 0, int neuron = 0)
     {
         generation = 0;
         numLayer = layer; numNeuron = neuron;
+        this.mapSize = mapSize;
         this.populationSize = populationSize;
         this.architecture = architecture;
         for (int i = 0; i < populationSize; i++)
@@ -148,7 +149,7 @@ public class Genetic
 
     public void PrintPopulation(string Architecture)
     {
-        string path = Application.dataPath + "/Log/Genetic " + Architecture + ".txt";
+        string path = $"{Application.dataPath}/Log/Genetic {Architecture} {mapSize}x{mapSize}.txt";
         string content = "";
         for (int i = 0; i < Population.Count; i++)
         {

@@ -8,7 +8,7 @@ public class MFO
     public List<Individual> Population = new List<Individual>();
     public List<Individual> PreviousPopulation = new List<Individual>();
     private List<Individual> BestFlames = new List<Individual>();
-    public int populationSize, generation;
+    public int populationSize, generation, mapSize;
     private bool isTree; // aku simpen isTree supaya pas initialize if nya engga berat jadi langsung akses bool
     private int IndSize; // ukuran individu karen kalo tree dan NN ukuran nya beda
     private int numLayer, numNeuron;
@@ -18,10 +18,11 @@ public class MFO
     private float a;
     private int FlameNo;
 
-    public MFO(int populationSize, ArchitectureOption architecture, int layer = 0, int neuron = 0)
+    public MFO(int populationSize, ArchitectureOption architecture, int mapSize, int layer = 0, int neuron = 0)
     {
         generation = 0;
         numLayer = layer; numNeuron = neuron;
+        this.mapSize = mapSize;
         this.populationSize = populationSize;
         this.architecture = architecture;
         for (int i = 0; i < populationSize; i++)
@@ -63,6 +64,7 @@ public class MFO
         {
             PreviousPopulation.Add(Ind.InitialiseCopy(numLayer, numNeuron));
         }
+        PrintPopulation(architecture + "");
 
         // a nanti akan digunakan untuk menghitung t yang ada di Eq. (3.12)
         a = -1.0f + (float)(generation + 1) * (-1.0f / ngens);
@@ -158,7 +160,7 @@ public class MFO
 
     public void PrintPopulation(string Architecture)
     {
-        string path = Application.dataPath + "/Log/WOA " + Architecture + ".txt";
+        string path = $"{Application.dataPath}/Log/MFO {Architecture} {mapSize}x{mapSize}.txt";
         string content = "";
         for (int i = 0; i < Population.Count; i++)
         {
