@@ -297,33 +297,26 @@ public class GameScript : MonoBehaviour
     }
     private void EvaluateWinGame(AlgorithmOption algorithmOption)
     {
-        // kalau win lanjut map selanjutnya pakai ulang dari awal & print population juga nama sesuai dengan map size nya
         if (algorithmOption == AlgorithmOption.Genetic)
         {
-            // setting achivement individual untuk nanti bantu hitung fitness
             genetic.Population[iterPopulation].Score = ScoreTracker.Instance.Score;
             genetic.Population[iterPopulation].HighestTile = HighestTile.Number;
             genetic.Population[iterPopulation].GameTime = GameTime;
-
-            //genetic.PrintPopulation(AIController.architecture);
+            AIController.PrintPopulation(genetic.Population, genetic.generation, mapSize, iterPopulation);
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {
-            // setting achivement individual untuk nanti bantu hitung fitness
             mfo.Population[iterPopulation].Score = ScoreTracker.Instance.Score;
             mfo.Population[iterPopulation].HighestTile = HighestTile.Number;
             mfo.Population[iterPopulation].GameTime = GameTime;
-
-            //mfo.PrintPopulation(AIController.architecture);
+            AIController.PrintPopulation(mfo.Population, mfo.generation, mapSize, iterPopulation);
         }
         else if (algorithmOption == AlgorithmOption.WOA)
         {
-            // setting achivement individual untuk nanti bantu hitung fitness
             woa.Population[iterPopulation].Score = ScoreTracker.Instance.Score;
             woa.Population[iterPopulation].HighestTile = HighestTile.Number;
             woa.Population[iterPopulation].GameTime = GameTime;
-
-            //woa.PrintPopulation(AIController.architecture);
+            AIController.PrintPopulation(woa.Population, woa.generation, mapSize, iterPopulation);
         }
     }
 

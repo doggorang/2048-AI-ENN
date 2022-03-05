@@ -64,7 +64,7 @@ public class MFO
         {
             PreviousPopulation.Add(Ind.InitialiseCopy(numLayer, numNeuron));
         }
-        PrintPopulation(architecture + "");
+        AIController.PrintPopulation(Population, generation, mapSize);
 
         // a nanti akan digunakan untuk menghitung t yang ada di Eq. (3.12)
         a = -1.0f + (float)(generation + 1) * (-1.0f / ngens);
@@ -156,25 +156,5 @@ public class MFO
                 BestFlames.Add(TempJoinPopulation[i].InitialiseCopy(numLayer, numNeuron));
             }
         }
-    }
-
-    public void PrintPopulation(string Architecture)
-    {
-        string path = $"{Application.dataPath}/Log/MFO {Architecture} {mapSize}x{mapSize}.txt";
-        string content = "";
-        for (int i = 0; i < Population.Count; i++)
-        {
-            content += "Generation: " + generation + " Population: " + i + " Fitness: " + Population[i].Fitness + "\nWeight: [ ";
-            foreach (float w in Population[i].Weights)
-            {
-                content += w + ", ";
-            }
-            content += "]\n";
-        }
-        content += "\n";
-        if (!File.Exists(path))
-            File.WriteAllText(path, content);
-        else
-            File.AppendAllText(path, content);
     }
 }

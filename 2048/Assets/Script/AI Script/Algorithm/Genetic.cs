@@ -55,7 +55,7 @@ public class Genetic
     {
         // selection hitung fitness lalu dapetin parents yaitu top 20% best
         Selection();
-        PrintPopulation(architecture + "");
+        AIController.PrintPopulation(Population, generation, mapSize);
         // crossover akan menghasil kan 80% untuk jadi children
         Crossover();
         // children yang tercipta akan dilewatkan mutation
@@ -145,25 +145,5 @@ public class Genetic
                 Ind.Weights[point2] = temp;
             }
         }
-    }
-
-    public void PrintPopulation(string Architecture)
-    {
-        string path = $"{Application.dataPath}/Log/Genetic {Architecture} {mapSize}x{mapSize}.txt";
-        string content = "";
-        for (int i = 0; i < Population.Count; i++)
-        {
-            content += "Generation: " + generation + " Population: " + i + " Fitness: "+ Population[i].Fitness + "\nWeight: [ ";
-            foreach (float w in Population[i].Weights)
-            {
-                content += w + ", ";
-            }
-            content+="]\n";
-        }
-        content += "\n";
-        if (!File.Exists(path))
-            File.WriteAllText(path, content);
-        else
-            File.AppendAllText(path, content);
     }
 }
