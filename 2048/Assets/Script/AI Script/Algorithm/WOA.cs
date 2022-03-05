@@ -98,17 +98,12 @@ public class WOA
     }
     private void CalculateFitness()
     {
-        // get the sum score to be used in fitness calculation
-        int sumScore = 0;
-        foreach (Individual i in Population)
-        {
-            sumScore += i.Score;
-        }
+        int HighScore = PlayerPrefs.GetInt("HighScore");
         // calculate every individual's fitness
         for (int i = 0; i < Population.Count; i++)
         {
             // calculate fitness highest tile saja karena saat endgame biasanya sudah berantakan jadi second highest tile dll pindah"
-            float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)sumScore)) / 2;
+            float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
         }
     }
