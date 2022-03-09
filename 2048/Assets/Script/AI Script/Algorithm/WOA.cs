@@ -57,7 +57,6 @@ public class WOA
     public void Optimize()
     {
         CalculateFitness();
-        AIController.PrintPopulation(Population, generation, mapSize);
         // sorting population
         Population.Sort(AIController.SortFunc);
         Individual best = Population[0];
@@ -106,6 +105,7 @@ public class WOA
             float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
         }
+        AIController.PrintPopulation(Population, generation, mapSize);
     }
 
     private void Encircle(Individual i, Individual best, float A, float C)

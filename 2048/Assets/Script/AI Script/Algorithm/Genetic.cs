@@ -55,7 +55,6 @@ public class Genetic
     {
         // selection hitung fitness lalu dapetin parents yaitu top 20% best
         Selection();
-        AIController.PrintPopulation(Population, generation, mapSize);
         // crossover akan menghasil kan 80% untuk jadi children
         Crossover();
         // children yang tercipta akan dilewatkan mutation
@@ -84,9 +83,11 @@ public class Genetic
             float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
         }
+        AIController.PrintPopulation(Population, generation, mapSize);
 
         // sorting population untuk dapat diambil 20% top nya sebagai parent
         Population.Sort(AIController.SortFunc);
+        Debug.Log(Population[0].Fitness);
         for (int i = 0; i < populationSize/5; i++)
         {
             Parents.Add(Population[i].InitialiseCopy(numLayer, numNeuron));

@@ -35,7 +35,7 @@ public class GameScript : MonoBehaviour
     private Genetic genetic;
     private WOA woa;
     private MFO mfo;
-    private int populationSize = 10;
+    private int populationSize = 30;
     private int iterPopulation = 0;
     private bool IsGameOver = false;
     private int numLayer = 1;

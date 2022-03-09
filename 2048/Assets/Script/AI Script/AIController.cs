@@ -55,13 +55,13 @@ public class AIController : MonoBehaviour
     {
         if (a.Fitness < b.Fitness)
         {
-            return -1;
+            return 1;
         }
         else if (a.Fitness > b.Fitness)
         {
-            return 1;
+            return -1;
         }
-        return 0;
+       return 0;
     }
 
     public static void PrintPopulation(List<Individual> Population, int generation, int mapSize, int index = -1)
@@ -81,7 +81,7 @@ public class AIController : MonoBehaviour
         string content = "";
         for (int i = ctr; i < maxCtr; i++)
         {
-            content += "Generation: " + generation + " Population: " + i + " Fitness: " + Population[i].Fitness + "\nWeight: [ ";
+            content += $"Generation: {generation} Population: {i} Fitness: {Population[i].Fitness} Score: {Population[i].Score} Tile: {Population[i].HighestTile} Time: {Population[i].GameTime}\nWeight: [ ";
             foreach (float w in Population[i].Weights)
             {
                 content += w + ", ";

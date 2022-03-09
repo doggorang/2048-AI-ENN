@@ -64,7 +64,6 @@ public class MFO
         {
             PreviousPopulation.Add(Ind.InitialiseCopy(numLayer, numNeuron));
         }
-        AIController.PrintPopulation(Population, generation, mapSize);
 
         // a nanti akan digunakan untuk menghitung t yang ada di Eq. (3.12)
         a = -1.0f + (float)(generation + 1) * (-1.0f / ngens);
@@ -119,6 +118,7 @@ public class MFO
             float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
         }
+        AIController.PrintPopulation(Population, generation, mapSize);
     }
     private void GetBestFlame()
     {
