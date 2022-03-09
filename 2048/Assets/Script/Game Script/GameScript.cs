@@ -41,6 +41,9 @@ public class GameScript : MonoBehaviour
     private int numLayer = 1;
     private int numNeuron = 10;
 
+    private bool IsLoad = false;
+    private Individual LoadedIndividual;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,9 +54,19 @@ public class GameScript : MonoBehaviour
             lineMoveComplete[i] = true;
         }
         AllTiles = new Tile[mapSize, mapSize];
-        InitAlgo(AIController.algorithm, AIController.architecture);
-        TextDescriptionAlgorithm.text = "Algorithm  - <b>" + AIController.algorithm + "</b>";
-        TextDescriptionArchitecture.text = "Architecture - <b>" + AIController.architecture + "</b>";
+
+        if (AIController.path == null)
+        {
+            InitAlgo(AIController.algorithm, AIController.architecture);
+            TextDescriptionAlgorithm.text = "Algorithm  - <b>" + AIController.algorithm + "</b>";
+            TextDescriptionArchitecture.text = "Architecture - <b>" + AIController.architecture + "</b>";
+        }
+        else
+        {
+            IsLoad = true;
+            LoadedIndividual = AIController.LoadInd();
+        }
+
         RestartGame();
     }
 
@@ -206,31 +219,51 @@ public class GameScript : MonoBehaviour
     private void MoveAgent(AlgorithmOption algorithmOption)
     {
         MoveDirection ret = MoveDirection.Left;
-        if (algorithmOption == AlgorithmOption.Genetic)
+        if (IsLoad)
         {
-            if (genetic.architecture == ArchitectureOption.Tree)
+            if (AIController.architecture == ArchitectureOption.Tree)
             {
-                ret = TreeSimulation(genetic.Population[iterPopulation].Weights);
+                ret = TreeSimulation(LoadedIndividual.Weights);
             }
             else
             {
-                ret = NNSimulation(genetic.Population[iterPopulation]);
+                ret = NNSimulation(LoadedIndividual);
             }
         }
-        else if (algorithmOption == AlgorithmOption.MFO)
+        else
         {
-
-            //Move(TreeSimulation(mfo.Population[iterPopulation].Weights));
-        }
-        else if (algorithmOption == AlgorithmOption.WOA)
-        {
-            if (woa.architecture == ArchitectureOption.Tree)
+            if (algorithmOption == AlgorithmOption.Genetic)
             {
-                ret = TreeSimulation(genetic.Population[iterPopulation].Weights);
+                if (genetic.architecture == ArchitectureOption.Tree)
+                {
+                    ret = TreeSimulation(genetic.Population[iterPopulation].Weights);
+                }
+                else
+                {
+                    ret = NNSimulation(genetic.Population[iterPopulation]);
+                }
             }
-            else
+            else if (algorithmOption == AlgorithmOption.MFO)
             {
-                ret = NNSimulation(genetic.Population[iterPopulation]);
+                if (mfo.architecture == ArchitectureOption.Tree)
+                {
+                    ret = TreeSimulation(mfo.Population[iterPopulation].Weights);
+                }
+                else
+                {
+                    ret = NNSimulation(mfo.Population[iterPopulation]);
+                }
+            }
+            else if (algorithmOption == AlgorithmOption.WOA)
+            {
+                if (woa.architecture == ArchitectureOption.Tree)
+                {
+                    ret = TreeSimulation(woa.Population[iterPopulation].Weights);
+                }
+                else
+                {
+                    ret = NNSimulation(woa.Population[iterPopulation]);
+                }
             }
         }
         Move(ret);

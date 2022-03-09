@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game6x6.unity
     guid: 97e075d52489f0042b096da76c377ddc
+  - enabled: 1
+    path: Assets/Scenes/LoadMenu.unity
+    guid: 8ef7ca6ef60aab547b05fb78de7baa27
   m_configObjects: {}

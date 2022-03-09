@@ -16,6 +16,7 @@ public class AIController : MonoBehaviour
 {
     public static AlgorithmOption algorithm;
     public static ArchitectureOption architecture;
+    public static string path;
     public static void SwitchCaseAlgorithm(string value)
     {
         switch (value)
@@ -65,11 +66,13 @@ public class AIController : MonoBehaviour
 
     public static void PrintPopulation(List<Individual> Population, int generation, int mapSize, int index = -1)
     {
-        string path = $"{Application.dataPath}/Log/WOA {architecture} {mapSize}x{mapSize}.txt";
         int ctr, maxCtr;
         if (index > 0)
         {
             ctr = index; maxCtr = index + 1;
+            string WinInd = JsonUtility.ToJson(Population[index], true);
+            string pathInd = $"{Application.dataPath}/Winner/{algorithm} {architecture} {mapSize}x{mapSize}.json";
+            File.WriteAllText(pathInd, WinInd);
         }
         else
         {
@@ -86,9 +89,17 @@ public class AIController : MonoBehaviour
             content += "]\n";
         }
         content += "\n";
+        string path = $"{Application.dataPath}/Log/{algorithm} {architecture} {mapSize}x{mapSize}.txt";
         if (!File.Exists(path))
             File.WriteAllText(path, content);
         else
             File.AppendAllText(path, content);
+    }
+
+    public static Individual LoadInd()
+    {
+        string json = File.ReadAllText(path);
+        Individual ret = JsonUtility.FromJson<Individual>(json);
+        return ret;
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -42,18 +40,51 @@ public class SceneSwitcher : MonoBehaviour
         }
         AIController.SwitchCaseAlgorithm(algo);
         AIController.SwitchCaseArchitecture(archi);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(1);
     }
     public void PlayGameStage2()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(2);
     }
     public void PlayGameStage3()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(3);
     }
     public void MainMenu()
     {
         SceneManager.LoadScene(0);
+    }
+    public void LoadGameSceneSwitcher()
+    {
+        SceneManager.LoadScene(4);
+    }
+    public void LoadGame()
+    {
+        string mapSize = "Genetic";
+        int sceneNum;
+        GameObject GOMapSize = GameObject.Find("MapSizeOption");
+        for (int i = 0; i < GOMapSize.transform.childCount; i++)
+        {
+            if (GOMapSize.transform.GetChild(i).GetComponent<Toggle>().isOn)
+            {
+                mapSize = GOMapSize.transform.GetChild(i).Find("Label").GetComponent<Text>().text;
+            }
+        }
+        switch (mapSize)
+        {
+            case "4x4":
+                sceneNum = 1;
+                break;
+            case "5x5":
+                sceneNum = 2;
+                break;
+            case "6x6":
+                sceneNum = 3;
+                break;
+            default:
+                sceneNum = 1;
+                break;
+        }
+        SceneManager.LoadScene(sceneNum);
     }
 }
