@@ -12,6 +12,8 @@ public class GameScript : MonoBehaviour
     private bool moveMade;
     // bolean to check if move is done because it has delay so it doesnt move around
     private bool[] lineMoveComplete;
+    //    highest tile tau" berubah jadi kecil ?
+    //simulation ini rasanya ada yang salah update empty tile mungkin ?
 
     public Text TextDescriptionAlgorithm, TextDescriptionArchitecture;
     public Text TextIterationPopulation, TextIterationGeneration;
@@ -35,7 +37,7 @@ public class GameScript : MonoBehaviour
     private Genetic genetic;
     private WOA woa;
     private MFO mfo;
-    private int populationSize = 30;
+    private int populationSize = 10;
     private int iterPopulation = 0;
     private bool IsGameOver = false;
     private int numLayer = 1;
@@ -43,6 +45,7 @@ public class GameScript : MonoBehaviour
 
     private bool IsLoad = false;
     private Individual LoadedIndividual;
+    private int ctr = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -77,7 +80,9 @@ public class GameScript : MonoBehaviour
         {
             if (State == GameState.Playing)
             {
+                Debug.Log($"sebelum Highest Tile: {HighestTile.Number} {HighestTile.indCol} {HighestTile.indRow}           {ctr++}");
                 MoveAgent(AIController.algorithm);
+                Debug.Log($"sesudah Highest Tile: {HighestTile.Number} {HighestTile.indCol} {HighestTile.indRow}           {ctr++}");
             }
             GameTime += Time.deltaTime;
             System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
@@ -372,7 +377,7 @@ public class GameScript : MonoBehaviour
                     up = AllTiles[i - 1, j];
                 }
 
-                if (i == mapSize-1)
+                if (i == mapSize - 1)
                 {
                     down = null;
                 }
@@ -390,7 +395,7 @@ public class GameScript : MonoBehaviour
                     left = AllTiles[i, j - 1];
                 }
 
-                if (j == mapSize-1)
+                if (j == mapSize - 1)
                 {
                     right = null;
                 }
@@ -466,9 +471,9 @@ public class GameScript : MonoBehaviour
         // input layer 3
         if (
             (HighestTile.indRow == 0 && HighestTile.indCol == 0) ||
-            (HighestTile.indRow == mapSize-1 && HighestTile.indCol == mapSize-1) ||
-            (HighestTile.indRow == mapSize-1 && HighestTile.indCol == 0) ||
-            (HighestTile.indRow == 0 && HighestTile.indCol == mapSize-1)
+            (HighestTile.indRow == mapSize - 1 && HighestTile.indCol == mapSize - 1) ||
+            (HighestTile.indRow == mapSize - 1 && HighestTile.indCol == 0) ||
+            (HighestTile.indRow == 0 && HighestTile.indCol == mapSize - 1)
         )
         {
             IsHighestTileCorner = true;
@@ -610,9 +615,23 @@ public class GameScript : MonoBehaviour
                 break;
         }
 
-        foreach (bool b in lineMoveComplete)
+        if (mapSize == 4)
         {
-            if (!b)
+            while (!(lineMoveComplete[0] && lineMoveComplete[1] && lineMoveComplete[2] && lineMoveComplete[3]))
+            {
+                yield return null;
+            }
+        }
+        else if (mapSize == 5)
+        {
+            while (!(lineMoveComplete[0] && lineMoveComplete[1] && lineMoveComplete[2] && lineMoveComplete[3] && lineMoveComplete[4]))
+            {
+                yield return null;
+            }
+        }
+        else if (mapSize == 6)
+        {
+            while (!(lineMoveComplete[0] && lineMoveComplete[1] && lineMoveComplete[2] && lineMoveComplete[3] && lineMoveComplete[4] && lineMoveComplete[5]))
             {
                 yield return null;
             }
@@ -622,12 +641,6 @@ public class GameScript : MonoBehaviour
         {
             UpdateEmptyTiles();
             GetInputLayer();
-            //Debug.Log("Highest Tile: " + HighestTile.Number);
-            //Debug.Log("SequenceTile: " + SequenceTile);
-            //Debug.Log("IsHighestTileCorner: " + IsHighestTileCorner);
-            //Debug.Log("SequenceMerge: " + SequenceMerge);
-            //Debug.Log("CountSmallTile: " + CountSmallTile);
-            //Debug.Log("IsHighestTileDense: " + IsHighestTileDense);
             Generate();
             if (!CanMove())
             {

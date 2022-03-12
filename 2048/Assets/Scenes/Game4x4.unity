@@ -3001,7 +3001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   State: 0
-  delay: 0.015
+  delay: 0.5
   mapSize: 4
   TextDescriptionAlgorithm: {fileID: 838808364}
   TextDescriptionArchitecture: {fileID: 586291550}
