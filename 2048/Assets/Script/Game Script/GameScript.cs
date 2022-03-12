@@ -12,8 +12,6 @@ public class GameScript : MonoBehaviour
     private bool moveMade;
     // bolean to check if move is done because it has delay so it doesnt move around
     private bool[] lineMoveComplete;
-    //    highest tile tau" berubah jadi kecil ?
-    //simulation ini rasanya ada yang salah update empty tile mungkin ?
 
     public Text TextDescriptionAlgorithm, TextDescriptionArchitecture;
     public Text TextIterationPopulation, TextIterationGeneration;
@@ -37,7 +35,7 @@ public class GameScript : MonoBehaviour
     private Genetic genetic;
     private WOA woa;
     private MFO mfo;
-    private int populationSize = 10;
+    private int populationSize = 40;
     private int iterPopulation = 0;
     private bool IsGameOver = false;
     private int numLayer = 1;
@@ -45,7 +43,6 @@ public class GameScript : MonoBehaviour
 
     private bool IsLoad = false;
     private Individual LoadedIndividual;
-    private int ctr = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -80,9 +77,7 @@ public class GameScript : MonoBehaviour
         {
             if (State == GameState.Playing)
             {
-                Debug.Log($"sebelum Highest Tile: {HighestTile.Number} {HighestTile.indCol} {HighestTile.indRow}           {ctr++}");
                 MoveAgent(AIController.algorithm);
-                Debug.Log($"sesudah Highest Tile: {HighestTile.Number} {HighestTile.indCol} {HighestTile.indRow}           {ctr++}");
             }
             GameTime += Time.deltaTime;
             System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
@@ -92,6 +87,7 @@ public class GameScript : MonoBehaviour
 
     private MoveDirection TreeSimulation(List<float> Weights)
     {
+        Tile TempHighestTile = HighestTile;
         int[,] TempAllTiles = new int[mapSize, mapSize];
         foreach (Tile t in AllTiles)
         {
@@ -147,6 +143,7 @@ public class GameScript : MonoBehaviour
             {
                 AllTiles[t.indRow, t.indCol].Number = TempAllTiles[t.indRow, t.indCol];
             }
+            HighestTile = TempHighestTile;
             if (score > Highscore)
             {
                 Highscore = score;
@@ -157,6 +154,7 @@ public class GameScript : MonoBehaviour
     }
     private MoveDirection NNSimulation(Individual Ind)
     {
+        Tile TempHighestTile = HighestTile;
         int[,] TempAllTiles = new int[mapSize, mapSize];
         foreach (Tile t in AllTiles)
         {
@@ -197,6 +195,7 @@ public class GameScript : MonoBehaviour
             {
                 AllTiles[t.indRow, t.indCol].Number = TempAllTiles[t.indRow, t.indCol];
             }
+            HighestTile = TempHighestTile;
             if (moveMade)
             {
                 ret = md;

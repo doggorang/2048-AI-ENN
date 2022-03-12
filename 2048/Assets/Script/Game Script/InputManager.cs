@@ -34,7 +34,7 @@ public class InputManager : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.C))
             {
-                //float[] tempWeights = new float[6] { 1, 1, 1, 1, 1, 1 };
+                //List<float> tempWeights = new List<float>() { 1,1,1,1,1,1 };
                 //Debug.Log(gm.TreeSimulation(tempWeights));
             }
         }
