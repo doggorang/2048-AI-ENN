@@ -97,7 +97,7 @@ public class WOA
     }
     private void CalculateFitness()
     {
-        int HighScore = PlayerPrefs.GetInt("HighScore");
+        int HighScore = PlayerPrefs.GetInt($"HighScore{mapSize}");
         // calculate every individual's fitness
         for (int i = 0; i < Population.Count; i++)
         {

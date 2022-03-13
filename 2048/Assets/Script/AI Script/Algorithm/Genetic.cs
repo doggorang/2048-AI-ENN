@@ -75,7 +75,7 @@ public class Genetic
     }
     private void Selection()
     {
-        int HighScore = PlayerPrefs.GetInt("HighScore");
+        int HighScore = PlayerPrefs.GetInt($"HighScore{mapSize}");
         // calculate every individual's fitness
         for (int i = 0; i < Population.Count; i++)
         {

@@ -3915,6 +3915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b3035ee5be139438a76934fe1d0cc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapSize: 5
   ScoreText: {fileID: 1614806306}
   HighScoreText: {fileID: 850887562}
 --- !u!114 &767843461

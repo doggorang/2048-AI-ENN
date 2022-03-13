@@ -7,6 +7,7 @@ public class ScoreTracker : MonoBehaviour
 {
     private int score;
     public static ScoreTracker Instance;
+    public int mapSize;
     public Text ScoreText;
     public Text HighScoreText;
     public int Score
@@ -19,9 +20,9 @@ public class ScoreTracker : MonoBehaviour
         {
             score = value;
             ScoreText.text = score.ToString();
-            if (PlayerPrefs.GetInt("HighScore") < score)
+            if (PlayerPrefs.GetInt($"HighScore{mapSize}") < score)
             {
-                PlayerPrefs.SetInt("HighScore", score);
+                PlayerPrefs.SetInt($"HighScore{mapSize}", score);
                 ScoreText.text = score.ToString();
             }
         }
@@ -29,11 +30,19 @@ public class ScoreTracker : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        if (!PlayerPrefs.HasKey("HighScore"))
+        if (!PlayerPrefs.HasKey("HighScore4"))
         {
-            PlayerPrefs.SetInt("HighScore", score);
+            PlayerPrefs.SetInt("HighScore4", score);
+        }
+        if (!PlayerPrefs.HasKey("HighScore5"))
+        {
+            PlayerPrefs.SetInt("HighScore5", score);
+        }
+        if (!PlayerPrefs.HasKey("HighScore6"))
+        {
+            PlayerPrefs.SetInt("HighScore6", score);
         }
         ScoreText.text = "0";
-        HighScoreText.text = PlayerPrefs.GetInt("HighScore").ToString();
+        HighScoreText.text = PlayerPrefs.GetInt($"HighScore{mapSize}").ToString();
     }
 }
