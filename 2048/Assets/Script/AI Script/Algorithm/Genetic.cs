@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
 
 public class Genetic
 {
@@ -15,6 +14,8 @@ public class Genetic
     private int IndSize; // ukuran individu karen kalo tree dan NN ukuran nya beda
     private int numLayer, numNeuron;
     public ArchitectureOption architecture;
+
+    int bitCount = sizeof(float) * 8;
 
     public Genetic(int populationSize, ArchitectureOption architecture, int mapSize, int layer = 0, int neuron = 0)
     {
@@ -111,12 +112,17 @@ public class Genetic
             List<float> newIndWeight = new List<float>();
             for (int j = 0; j < IndSize; j++)
             {
-                int choosenParent;
-                if (Random.value < 0.5) // kalau kurang dari 0.5 maka ambil dari parent1 else parent 2
-                    choosenParent = parent1;
-                else
-                    choosenParent = parent2;
-                newIndWeight.Add(Population[choosenParent].Weights[j]);
+                string parent1Binary = ToBinaryString(Population[parent1].Weights[j]);
+                string parent2Binary = ToBinaryString(Population[parent2].Weights[j]);
+                string newBinaryW = "";
+                for (int k = 0; k < bitCount; k++)
+                {
+                    if (Random.value < 0.5) // kalau kurang dari 0.5 maka ambil dari parent1 else parent 2
+                        newBinaryW += parent1Binary[k];
+                    else
+                        newBinaryW += parent2Binary[k];
+                }
+                newIndWeight.Add(FromBinaryString(newBinaryW));
             }
             Children.Add(new Individual(newIndWeight, architecture, numLayer, numNeuron));
         }
@@ -140,5 +146,16 @@ public class Genetic
                 Ind.Weights[point2] = temp;
             }
         }
+    }
+    private string ToBinaryString(float value)
+    {
+        int intValue = System.BitConverter.ToInt32(System.BitConverter.GetBytes(value), 0);
+        return System.Convert.ToString(intValue, 2).PadLeft(bitCount, '0');
+    }
+
+    private float FromBinaryString(string bstra)
+    {
+        int intValue = System.Convert.ToInt32(bstra, 2);
+        return System.BitConverter.ToSingle(System.BitConverter.GetBytes(intValue), 0);
     }
 }

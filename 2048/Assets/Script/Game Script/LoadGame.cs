@@ -1,17 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using SmartDLL;
 
 public class LoadGame : MonoBehaviour
 {
     public Text TextFileName;
-    public void OpenFileExplorer()
+    private SmartFileExplorer fileExplorer = new SmartFileExplorer();
+    private bool readText = false;
+    private void OpenFileExplorer()
     {
-        string path = EditorUtility.OpenFilePanel("Open Individual", Application.dataPath, "json");
-        AIController.path = path;
-        int ctrSubStr = path.LastIndexOf("2048");
-        TextFileName.text = path.Substring(ctrSubStr, path.Length - ctrSubStr);
+        fileExplorer.OpenExplorer(Application.dataPath, true, "Open Individual", "json", "json files (*.json)|*.json");
+        readText = true;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (fileExplorer.resultOK && readText)
+        {
+            string path = fileExplorer.fileName;
+            AIController.path = path;
+            int ctrSubStr = path.LastIndexOf("2048");
+            TextFileName.text = path.Substring(ctrSubStr, path.Length - ctrSubStr);
+            readText = false;
+        }
     }
 }
