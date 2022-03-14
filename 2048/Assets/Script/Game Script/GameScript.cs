@@ -35,7 +35,7 @@ public class GameScript : MonoBehaviour
     private Genetic genetic;
     private WOA woa;
     private MFO mfo;
-    private int populationSize = 40;
+    private int populationSize = 10;
     private int iterPopulation = 0;
     private bool IsGameOver = false;
     private int numLayer = 1;
@@ -94,12 +94,12 @@ public class GameScript : MonoBehaviour
             TempAllTiles[t.indRow, t.indCol] = t.Number;
         }
 
-        float Highscore = 0;
+        float Highscore = float.MinValue;
         MoveDirection ret = MoveDirection.Left;
         MoveDirection[] arrMD = new MoveDirection[4] { MoveDirection.Left, MoveDirection.Up, MoveDirection.Right, MoveDirection.Down };
         foreach (MoveDirection md in arrMD)
         {
-            float score = 0;
+            float score = float.MinValue;
             moveMade = false;
             ResetMergedFlags();
             for (int i = 0; i < rows.Count; i++)
@@ -128,7 +128,6 @@ public class GameScript : MonoBehaviour
             }
             if (moveMade)
             {
-                UpdateEmptyTiles();
                 GetInputLayer();
                 // hitung score
                 score = (HighestTile.Number * Weights[0]) +
@@ -144,6 +143,7 @@ public class GameScript : MonoBehaviour
                 AllTiles[t.indRow, t.indCol].Number = TempAllTiles[t.indRow, t.indCol];
             }
             HighestTile = TempHighestTile;
+            UpdateEmptyTiles();
             if (score > Highscore)
             {
                 Highscore = score;
@@ -161,6 +161,7 @@ public class GameScript : MonoBehaviour
             TempAllTiles[t.indRow, t.indCol] = t.Number;
         }
         MoveDirection ret = MoveDirection.Left;
+        GetInputLayer();
         MoveDirection[] arrMD = Ind.nn.Move(HighestTile.Number, SequenceTile, IsHighestTileCorner ? 1 : 0, SequenceMerge, CountSmallTile, IsHighestTileDense ? 1 : 0);
         foreach (MoveDirection md in arrMD)
         {
@@ -196,6 +197,7 @@ public class GameScript : MonoBehaviour
                 AllTiles[t.indRow, t.indCol].Number = TempAllTiles[t.indRow, t.indCol];
             }
             HighestTile = TempHighestTile;
+            UpdateEmptyTiles();
             if (moveMade)
             {
                 ret = md;
@@ -283,7 +285,7 @@ public class GameScript : MonoBehaviour
             // kalau iter populasi masih ada lanjut else repopulasi
             if (iterPopulation < populationSize - 1)
             {
-                TextIterationPopulation.text = "" + ++iterPopulation;
+                iterPopulation++;
             }
             else
             {
@@ -291,6 +293,7 @@ public class GameScript : MonoBehaviour
                 genetic.RePopulate();
                 TextIterationGeneration.text = "" + genetic.generation;
             }
+            TextIterationPopulation.text = "" + iterPopulation;
             RestartGame();
         }
         else if (algorithmOption == AlgorithmOption.MFO)
@@ -302,7 +305,7 @@ public class GameScript : MonoBehaviour
             // kalau iter populasi masih ada lanjut else repopulasi
             if (iterPopulation < populationSize - 1)
             {
-                TextIterationPopulation.text = "" + ++iterPopulation;
+                iterPopulation++;
             }
             else
             {
@@ -310,6 +313,7 @@ public class GameScript : MonoBehaviour
                 mfo.UpdateMothPosition();
                 TextIterationGeneration.text = "" + mfo.generation;
             }
+            TextIterationPopulation.text = "" + iterPopulation;
             RestartGame();
         }
         else if (algorithmOption == AlgorithmOption.WOA)
@@ -321,7 +325,7 @@ public class GameScript : MonoBehaviour
             // kalau iter populasi masih ada lanjut else repopulasi
             if (iterPopulation < populationSize - 1)
             {
-                TextIterationPopulation.text = "" + ++iterPopulation;
+                iterPopulation++;
             }
             else
             {
@@ -329,6 +333,7 @@ public class GameScript : MonoBehaviour
                 woa.Optimize();
                 TextIterationGeneration.text = "" + woa.generation;
             }
+            TextIterationPopulation.text = "" + iterPopulation;
             RestartGame();
         }
     }
@@ -359,15 +364,26 @@ public class GameScript : MonoBehaviour
 
     private void UpdateEmptyTiles()
     {
-        CountSmallTile = 0;
         EmptyTiles.Clear();
+        for (int i = 0; i < mapSize; i++)
+        {
+            for (int j = 0; j < mapSize; j++)
+            {
+                if (AllTiles[i, j].Number == 0)
+                    EmptyTiles.Add(AllTiles[i, j]);
+            }
+        }
+    }
+    private void GetInputLayer()
+    {
+        CountSmallTile = 0;
         for (int i = 0; i < mapSize; i++)
         {
             for (int j = 0; j < mapSize; j++)
             {
                 // step 1 input layer 2 & 4
                 Tile left, up, right, down;
-                if (i == 0)
+                if (i == 0 || AllTiles[i - 1, j].Number == 0)
                 {
                     up = null;
                 }
@@ -376,7 +392,7 @@ public class GameScript : MonoBehaviour
                     up = AllTiles[i - 1, j];
                 }
 
-                if (i == mapSize - 1)
+                if (i == mapSize - 1 || AllTiles[i + 1, j].Number == 0)
                 {
                     down = null;
                 }
@@ -385,7 +401,7 @@ public class GameScript : MonoBehaviour
                     down = AllTiles[i + 1, j];
                 }
 
-                if (j == 0)
+                if (j == 0 || AllTiles[i, j - 1].Number == 0)
                 {
                     left = null;
                 }
@@ -394,7 +410,7 @@ public class GameScript : MonoBehaviour
                     left = AllTiles[i, j - 1];
                 }
 
-                if (j == mapSize - 1)
+                if (j == mapSize - 1 || AllTiles[i, j + 1].Number == 0)
                 {
                     right = null;
                 }
@@ -407,15 +423,8 @@ public class GameScript : MonoBehaviour
                 // input layer 5
                 if (AllTiles[i, j].Number > 0 && AllTiles[i, j].Number <= 32)
                     CountSmallTile++;
-
-                if (AllTiles[i, j].Number == 0)
-                    EmptyTiles.Add(AllTiles[i, j]);
-
             }
         }
-    }
-    private void GetInputLayer()
-    {
         // step 2 & akhir input layer 2
         SequenceTile = 0;
         Tile tempSequenceTile = HighestTile;
@@ -432,7 +441,7 @@ public class GameScript : MonoBehaviour
                         {
                             nextTempTile = item;
                         }
-                        else if (item.Number < tempSequenceTile.Number && item.Number > nextTempTile.Number)
+                        else if (item.Number > nextTempTile.Number)
                         {
                             nextTempTile = item;
                         }
@@ -667,7 +676,13 @@ public class GameScript : MonoBehaviour
         HighestTile = AllTiles[0, 0];
         InitColumnsRows();
         Generate(); Generate();
-        TextIterationPopulation.text = "" + iterPopulation;
+        foreach (Tile t in AllTiles)
+        {
+            if (t.Number > HighestTile.Number)
+            {
+                HighestTile = t;
+            }
+        }
     }
     private void GameOver(string text, bool IsWin = false)
     {

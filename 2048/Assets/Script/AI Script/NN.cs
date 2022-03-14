@@ -73,13 +73,13 @@ public class NN
         outputLayer = ((hiddenLayers[hiddenLayers.Count - 1] * weights[weights.Count - 1]) + biases[biases.Count - 1]).PointwiseTanh();
         // biggest score return direction
         MoveDirection[] ret = new MoveDirection[4] { MoveDirection.Left, MoveDirection.Up, MoveDirection.Right, MoveDirection.Down };
-        float[] score = new float[4] { Sigmoid(outputLayer[0, 0]), Sigmoid(outputLayer[0, 1]),Sigmoid(outputLayer[0, 2]),Sigmoid(outputLayer[0, 3]) };
+        float[] score = new float[4] { Sigmoid(outputLayer[0, 0]), Sigmoid(outputLayer[0, 1]), Sigmoid(outputLayer[0, 2]), Sigmoid(outputLayer[0, 3]) };
         // sorting sesuai order score dan move direction
         for (int i = 0; i < 4; i++)
         {
-            for (int j = 0; j < 3-i; j++)
+            for (int j = 0; j < 3 - i; j++)
             {
-                if (score[j] > score[j+1])
+                if (score[j] > score[j + 1])
                 {
                     float temp = score[j];
                     MoveDirection tempMd = ret[j];

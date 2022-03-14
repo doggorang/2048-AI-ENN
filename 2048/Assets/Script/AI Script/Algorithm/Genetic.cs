@@ -125,16 +125,16 @@ public class Genetic
     {
         foreach (Individual Ind in Children)
         {
-            // pakai cara swap mutation
-            int point1, point2;
-            point1 = Random.Range(0, IndSize);
-            do
-            {
-                point2 = Random.Range(0, IndSize);
-            } while (point1 == point2);
             // kalau hasil random < dari mutationRate maka di mutasi akan dilakukan
             if (Random.value < mutationRate)
             {
+                // pakai cara swap mutation
+                int point1, point2;
+                point1 = Random.Range(0, IndSize);
+                do
+                {
+                    point2 = Random.Range(0, IndSize);
+                } while (point1 == point2);
                 float temp = Ind.Weights[point1];
                 Ind.Weights[point1] = Ind.Weights[point2];
                 Ind.Weights[point2] = temp;

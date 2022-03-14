@@ -59,14 +59,13 @@ public class WOA
         CalculateFitness();
         // sorting population
         Population.Sort(AIController.SortFunc);
-        Individual best = Population[0];
-        NewPopulation.Add(best.InitialiseCopy(numLayer, numNeuron));
+        Individual best = Population[0].InitialiseCopy(numLayer, numNeuron);
         foreach (Individual sol in Population)
         {
-            float A = Compute_A(); // get capital A menggunakan equation 3
             // probability 50% antara mau attack atau mendekati prey
             if (Random.value < 0.5f)
             {
+                float A = Compute_A(); // get capital A menggunakan equation 3
                 float C = 2.0f * Random.value; // Equation  2.4
                 if (A < 1.0f)
                 {

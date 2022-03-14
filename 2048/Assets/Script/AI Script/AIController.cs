@@ -89,7 +89,7 @@ public class AIController : MonoBehaviour
             content += "]\n";
         }
         content += "\n";
-        string path = $"{Application.dataPath}/Log/{algorithm} {architecture} {mapSize}x{mapSize}.txt";
+        string path = $"{Application.dataPath}/Log/{algorithm}/{architecture}/{mapSize}x{mapSize}.txt";
         if (!File.Exists(path))
             File.WriteAllText(path, content);
         else
