@@ -19,27 +19,6 @@ public class SceneSwitcher : MonoBehaviour
 {
     public void PlayGameStage1()
     {
-        string algo = "Genetic", archi = "Tree";
-        // get radio button checked untuk algorithm
-        GameObject GOAlgo = GameObject.Find("AlgorithmOption");
-        for (int i = 0; i < GOAlgo.transform.childCount; i++)
-        {
-            if (GOAlgo.transform.GetChild(i).GetComponent<Toggle>().isOn)
-            {
-                algo = GOAlgo.transform.GetChild(i).Find("Label").GetComponent<Text>().text;
-            }
-        }
-        // get radio button checked untuk architecture
-        GameObject GOArchi = GameObject.Find("ArchitectureOption");
-        for (int i = 0; i < GOArchi.transform.childCount; i++)
-        {
-            if (GOArchi.transform.GetChild(i).GetComponent<Toggle>().isOn)
-            {
-                archi = GOArchi.transform.GetChild(i).Find("Label").GetComponent<Text>().text;
-            }
-        }
-        AIController.SwitchCaseAlgorithm(algo);
-        AIController.SwitchCaseArchitecture(archi);
         SceneManager.LoadScene(1);
     }
     public void PlayGameStage2()
@@ -86,5 +65,31 @@ public class SceneSwitcher : MonoBehaviour
                 break;
         }
         SceneManager.LoadScene(sceneNum);
+    }
+    public void HandleDropdownAlgorithm(int val)
+    {
+        if (val == 0)
+        {
+            AIController.algorithm = AlgorithmOption.Genetic;
+        }
+        else if (val == 1)
+        {
+            AIController.algorithm = AlgorithmOption.WOA;
+        }
+        else if (val == 2)
+        {
+            AIController.algorithm = AlgorithmOption.MFO;
+        }
+    }
+    public void HandleDropdownArchitecture(int val)
+    {
+        if (val == 0)
+        {
+            AIController.architecture = ArchitectureOption.Tree;
+        }
+        else if (val == 1)
+        {
+            AIController.architecture = ArchitectureOption.NN;
+        }
     }
 }
