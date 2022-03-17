@@ -6,7 +6,8 @@ using UnityEngine;
 public class NN
 {
     // 6 input layer sesuai dengan ukuran juga
-    public Matrix<float> inputLayer = Matrix<float>.Build.Dense(1, 6);
+    public Matrix<float> inputLayer = Matrix<float>.Build.Dense(1, 6); // ini 6 input layer
+    //public Matrix<float> inputLayer = Matrix<float>.Build.Dense(1, 16); // ini coba input layer map size 4x4
     // hidden layer jadi list karena ukuran bisa berubah"
     public List<Matrix<float>> hiddenLayers = new List<Matrix<float>>();
     // 4 output layer sesuai dengan output game
@@ -28,7 +29,8 @@ public class NN
             // i = 0 berarti weight hubungan pada input layer
             if (i == 0)
             {
-                weights.Add(Matrix<float>.Build.Dense(6, hiddenNeuronCount));
+                weights.Add(Matrix<float>.Build.Dense(6, hiddenNeuronCount)); // ini 6 input layer
+                //weights.Add(Matrix<float>.Build.Dense(16, hiddenNeuronCount)); // ini coba input layer map size 4x4
             }
             else
             {
@@ -55,7 +57,11 @@ public class NN
     public MoveDirection[] Move(float il0, float il1, float il2, float il3, float il4, float il5)
     {
         // masukin input layer
-        inputLayer[0, 0] = il0;
+        //for (int i = 0; i < 16; i++)// ini coba input layer map size 4x4 float[] IL
+        //{
+        //    inputLayer[0, i] = IL[i];
+        //}
+        inputLayer[0, 0] = il0; // ini 6 input layer
         inputLayer[0, 1] = il1;
         inputLayer[0, 2] = il2;
         inputLayer[0, 3] = il3;

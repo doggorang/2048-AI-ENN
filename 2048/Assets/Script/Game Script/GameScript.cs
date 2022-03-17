@@ -35,7 +35,7 @@ public class GameScript : MonoBehaviour
     private Genetic genetic;
     private WOA woa;
     private MFO mfo;
-    private int populationSize = 40;
+    private int populationSize = 50;
     private int iterPopulation = 0;
     private bool IsGameOver = false;
     private int numLayer = 1;
@@ -135,7 +135,13 @@ public class GameScript : MonoBehaviour
                     ((IsHighestTileCorner ? 1 : 0) * Weights[2]) +
                     (SequenceMerge * Weights[3]) +
                     (CountSmallTile * Weights[4]) +
-                    ((IsHighestTileDense ? 1 : 0) * Weights[5]);
+                    ((IsHighestTileDense ? 1 : 0) * Weights[5]); // ini 6 input layer
+                //score = 0;
+                //foreach (Tile t in AllTiles) // ini coba input layer map size
+                //{
+                //    int ctr = t.indRow * 4 + t.indCol;
+                //    score += Weights[ctr] * t.Number;
+                //}
             }
             // reset ulang map untuk kembali di simulasi
             foreach (Tile t in AllTiles)
@@ -156,13 +162,17 @@ public class GameScript : MonoBehaviour
     {
         Tile TempHighestTile = HighestTile;
         int[,] TempAllTiles = new int[mapSize, mapSize];
+        //float[] IL = new float[16];
         foreach (Tile t in AllTiles)
         {
+            //int ctr = t.indRow * 4 + t.indCol;
+            //IL[ctr] = t.Number;
             TempAllTiles[t.indRow, t.indCol] = t.Number;
         }
+        //MoveDirection[] arrMD = Ind.nn.Move(IL);// ini coba input layer map size
         MoveDirection ret = MoveDirection.Left;
         GetInputLayer();
-        MoveDirection[] arrMD = Ind.nn.Move(HighestTile.Number, SequenceTile, IsHighestTileCorner ? 1 : 0, SequenceMerge, CountSmallTile, IsHighestTileDense ? 1 : 0);
+        MoveDirection[] arrMD = Ind.nn.Move(HighestTile.Number, SequenceTile, IsHighestTileCorner ? 1 : 0, SequenceMerge, CountSmallTile, IsHighestTileDense ? 1 : 0); // ini 6 input layer
         foreach (MoveDirection md in arrMD)
         {
             moveMade = false;

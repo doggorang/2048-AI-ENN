@@ -30,13 +30,15 @@ public class Genetic
             // IndSize ini ukuran individu kalau tree pasti 6 kalau NN harus di itung dulu
             if (architecture == ArchitectureOption.Tree)
             {
-                isTree = true; IndSize = 6;
+                isTree = true; IndSize = 6; // ini 6 input layer
+                //isTree = true; IndSize = mapSize* mapSize; // ini coba input layer map size
             }
             else
             {
-                // (layer + 1)->bias + (6 * neuron)->input layer + ((layer-1)*neuron*neuron)->hidden layer + (4 * neuron)->output layer
-                IndSize = (layer + 1)+ (6 * neuron)+ ((layer - 1) * neuron * neuron)+ (4 * neuron);
                 isTree = false;
+                // (layer + 1)->bias + (6 * neuron)->input layer + ((layer-1)*neuron*neuron)->hidden layer + (4 * neuron)->output layer
+                IndSize = (layer + 1) + (6 * neuron) + ((layer - 1) * neuron * neuron) + (4 * neuron); // ini 6 input layer
+                //IndSize = (layer + 1) + (mapSize * mapSize * neuron) + ((layer - 1) * neuron * neuron) + (4 * neuron); // ini coba input layer map size
             }
             for (int j = 0; j < IndSize; j++)
             {

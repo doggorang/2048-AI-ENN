@@ -15,7 +15,7 @@ public class WOA
     private float a = 2.0f; // a disini artinya control search spread digunakan pada rumus metode" lain default: 2.0
     private float b = 0.5f; // b disini artinya controls spiral default: 0.5 ++
     private float a_step; // didapat dari hasil perhitungan yaitu step pengurangan a dari 2 sampai 0
-    private float ngens = 20.0f; // number of max generations
+    private float ngens = 50.0f; // number of max generations
 
     public WOA(int populationSize, ArchitectureOption architecture, int mapSize, int layer = 0, int neuron = 0)
     {
@@ -31,13 +31,15 @@ public class WOA
             // IndSize ini ukuran individu kalau tree pasti 6 kalau NN harus di itung dulu
             if (architecture == ArchitectureOption.Tree)
             {
-                isTree = true; IndSize = 6;
+                isTree = true; IndSize = 6; // ini 6 input layer
+                //isTree = true; IndSize = mapSize * mapSize; // ini coba input layer map size
             }
             else
             {
-                // (layer + 1)->bias + (6 * neuron)->input layer + ((layer-1)*neuron*neuron)->hidden layer + (4 * neuron)->output layer
-                IndSize = (layer + 1) + (6 * neuron) + ((layer - 1) * neuron * neuron) + (4 * neuron);
                 isTree = false;
+                // (layer + 1)->bias + (6 * neuron)->input layer + ((layer-1)*neuron*neuron)->hidden layer + (4 * neuron)->output layer
+                IndSize = (layer + 1) + (6 * neuron) + ((layer - 1) * neuron * neuron) + (4 * neuron); // ini 6 input layer
+                //IndSize = (layer + 1) + (mapSize * mapSize * neuron) + ((layer - 1) * neuron * neuron) + (4 * neuron); // ini coba input layer map size
             }
             for (int j = 0; j < IndSize; j++)
             {
