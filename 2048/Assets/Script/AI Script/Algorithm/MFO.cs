@@ -13,14 +13,15 @@ public class MFO
     private int numLayer, numNeuron;
     public ArchitectureOption architecture;
 
-    private float ngens = 50.0f; // number of max generations
+    private float ngens; // number of max generations
     private float a;
     private int FlameNo;
 
-    public MFO(int populationSize, ArchitectureOption architecture, int mapSize, int layer = 0, int neuron = 0)
+    public MFO(int populationSize, ArchitectureOption architecture, int mapSize, float max_gen, int layer, int neuron)
     {
         generation = 0;
         numLayer = layer; numNeuron = neuron;
+        ngens = max_gen;
         this.mapSize = mapSize;
         this.populationSize = populationSize;
         this.architecture = architecture;
@@ -79,7 +80,7 @@ public class MFO
         List<Individual> TempPopulation = new List<Individual>();
         for (int agentIndex = 0; agentIndex < populationSize; agentIndex++)
         {
-            List<float> bestFlamesVariables = new List<float>();
+            List<float> bestFlamesVariables;
             if (agentIndex <= FlameNo)
             {
                 // jika index < FlameNo maka pakai agentIndex sebagai pacuan flame untuk mengubah posisi
@@ -119,6 +120,7 @@ public class MFO
             float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
         }
+        Population.Sort(AIController.SortFunc);
         AIController.PrintPopulation(Population, generation, mapSize);
     }
     private void GetBestFlame()

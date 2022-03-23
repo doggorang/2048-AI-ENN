@@ -17,7 +17,7 @@ public class Genetic
 
     int bitCount = sizeof(float) * 8;
 
-    public Genetic(int populationSize, ArchitectureOption architecture, int mapSize, int layer = 0, int neuron = 0)
+    public Genetic(int populationSize, ArchitectureOption architecture, int mapSize, int layer, int neuron)
     {
         generation = 0;
         numLayer = layer; numNeuron = neuron;
@@ -86,10 +86,11 @@ public class Genetic
             float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
         }
-        AIController.PrintPopulation(Population, generation, mapSize);
 
         // sorting population untuk dapat diambil 20% top nya sebagai parent
         Population.Sort(AIController.SortFunc);
+        // print population urut dengan fitness
+        AIController.PrintPopulation(Population, generation, mapSize);
         for (int i = 0; i < populationSize/5; i++)
         {
             Parents.Add(Population[i].InitialiseCopy(numLayer, numNeuron));

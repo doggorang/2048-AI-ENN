@@ -85,7 +85,7 @@ public class NN
         {
             for (int j = 0; j < 3 - i; j++)
             {
-                if (score[j] > score[j + 1])
+                if (score[j] < score[j + 1])
                 {
                     float temp = score[j];
                     MoveDirection tempMd = ret[j];

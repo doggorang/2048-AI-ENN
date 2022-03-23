@@ -35,11 +35,12 @@ public class GameScript : MonoBehaviour
     private Genetic genetic;
     private WOA woa;
     private MFO mfo;
-    private int populationSize = 50;
+    private float ngens;
+    private int populationSize;
     private int iterPopulation = 0;
     private bool IsGameOver = false;
-    private int numLayer = 1;
-    private int numNeuron = 10;
+    private int numLayer;
+    private int numNeuron;
 
     private bool IsLoad = false;
     private Individual LoadedIndividual;
@@ -48,6 +49,10 @@ public class GameScript : MonoBehaviour
     void Start()
     {
         Random.InitState(218116692);
+        populationSize = AIController.populationSize;
+        ngens = (float)AIController.ngens;
+        numLayer = AIController.layer;
+        numNeuron = AIController.neuron;
         lineMoveComplete = new bool[mapSize];
         for (int i = 0; i < mapSize; i++)
         {
@@ -77,7 +82,7 @@ public class GameScript : MonoBehaviour
         {
             if (State == GameState.Playing)
             {
-                MoveAgent(AIController.algorithm);
+                //MoveAgent(AIController.algorithm);
             }
             GameTime += Time.deltaTime;
             System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
@@ -225,14 +230,14 @@ public class GameScript : MonoBehaviour
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {
-            mfo = new MFO(populationSize, architectureOption, mapSize, numLayer, numNeuron);
+            mfo = new MFO(populationSize, architectureOption, mapSize, ngens, numLayer, numNeuron);
         }
         else if (algorithmOption == AlgorithmOption.WOA)
         {
-            woa = new WOA(populationSize, architectureOption, mapSize, numLayer, numNeuron);
+            woa = new WOA(populationSize, architectureOption, mapSize, ngens, numLayer, numNeuron);
         }
     }
-    private void MoveAgent(AlgorithmOption algorithmOption)
+    public void MoveAgent(AlgorithmOption algorithmOption)
     {
         MoveDirection ret = MoveDirection.Left;
         if (IsLoad)

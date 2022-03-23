@@ -17,17 +17,11 @@ public enum MoveDirection
 
 public class SceneSwitcher : MonoBehaviour
 {
-    public void PlayGameStage1()
+    private int SceneDestination = 1;
+    public GameObject NNPanel;
+    public void PlayGame()
     {
-        SceneManager.LoadScene(1);
-    }
-    public void PlayGameStage2()
-    {
-        SceneManager.LoadScene(2);
-    }
-    public void PlayGameStage3()
-    {
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(SceneDestination);
     }
     public void MainMenu()
     {
@@ -69,27 +63,48 @@ public class SceneSwitcher : MonoBehaviour
     public void HandleDropdownAlgorithm(int val)
     {
         if (val == 0)
-        {
             AIController.algorithm = AlgorithmOption.Genetic;
-        }
         else if (val == 1)
-        {
             AIController.algorithm = AlgorithmOption.WOA;
-        }
         else if (val == 2)
-        {
             AIController.algorithm = AlgorithmOption.MFO;
-        }
     }
     public void HandleDropdownArchitecture(int val)
     {
         if (val == 0)
         {
             AIController.architecture = ArchitectureOption.Tree;
+            NNPanel.SetActive(false);
         }
         else if (val == 1)
         {
             AIController.architecture = ArchitectureOption.NN;
+            NNPanel.SetActive(true);
         }
+    }
+    public void HandleDropdownMap(int val)
+    {
+        if (val == 0)
+            SceneDestination = 1;
+        else if (val == 1)
+            SceneDestination = 2;
+        else if (val == 2)
+            SceneDestination = 3;
+    }
+    public void ReadIFGen(string val)
+    {
+        AIController.ngens = int.Parse(val);
+    }
+    public void ReadIFPop(string val)
+    {
+        AIController.populationSize = int.Parse(val);
+    }
+    public void ReadIFLayer(string val)
+    {
+        AIController.layer = int.Parse(val);
+    }
+    public void ReadIFNeuron(string val)
+    {
+        AIController.neuron = int.Parse(val);
     }
 }

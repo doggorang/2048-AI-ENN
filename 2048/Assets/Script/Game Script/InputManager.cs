@@ -36,6 +36,7 @@ public class InputManager : MonoBehaviour
             {
                 //List<float> tempWeights = new List<float>() { 1,1,1,1,1,1 };
                 //Debug.Log(gm.TreeSimulation(tempWeights));
+                gm.MoveAgent(AIController.algorithm);
             }
         }
     }

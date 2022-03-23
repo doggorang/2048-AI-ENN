@@ -1292,7 +1292,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1420347642}
-        m_MethodName: PlayGameStage2
+        m_MethodName: MainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7948,6 +7948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7de289cee1047554b8e14dab1400f62e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NNPanel: {fileID: 0}
 --- !u!114 &1420347643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9778,7 +9779,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Back to 5x5
+  m_Text: Back to Main Menu
 --- !u!222 &1788053703
 CanvasRenderer:
   m_ObjectHideFlags: 0

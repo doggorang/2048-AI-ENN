@@ -14,8 +14,12 @@ public enum ArchitectureOption
 
 public class AIController : MonoBehaviour
 {
-    public static AlgorithmOption algorithm;
-    public static ArchitectureOption architecture;
+    public static AlgorithmOption algorithm = AlgorithmOption.Genetic;
+    public static ArchitectureOption architecture = ArchitectureOption.Tree;
+    public static int ngens = 100;
+    public static int populationSize = 50;
+    public static int layer = 1;
+    public static int neuron = 10;
     public static string path;
 
     public static int SortFunc(Individual a, Individual b)

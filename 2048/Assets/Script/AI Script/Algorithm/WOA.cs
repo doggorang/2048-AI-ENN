@@ -15,9 +15,8 @@ public class WOA
     private float a = 2.0f; // a disini artinya control search spread digunakan pada rumus metode" lain default: 2.0
     private float b = 0.5f; // b disini artinya controls spiral default: 0.5 ++
     private float a_step; // didapat dari hasil perhitungan yaitu step pengurangan a dari 2 sampai 0
-    private float ngens = 50.0f; // number of max generations
 
-    public WOA(int populationSize, ArchitectureOption architecture, int mapSize, int layer = 0, int neuron = 0)
+    public WOA(int populationSize, ArchitectureOption architecture, int mapSize, float ngens, int layer, int neuron)
     {
         generation = 0;
         a_step = a / ngens;
@@ -60,6 +59,8 @@ public class WOA
         CalculateFitness();
         // sorting population
         Population.Sort(AIController.SortFunc);
+        // print population urut dengan fitness
+        AIController.PrintPopulation(Population, generation, mapSize);
         Individual best = Population[0].InitialiseCopy(numLayer, numNeuron);
         foreach (Individual sol in Population)
         {
@@ -105,7 +106,6 @@ public class WOA
             float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
         }
-        AIController.PrintPopulation(Population, generation, mapSize);
     }
 
     private void Encircle(Individual i, Individual best, float A, float C)
