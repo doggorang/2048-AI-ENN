@@ -82,7 +82,7 @@ public class GameScript : MonoBehaviour
         {
             if (State == GameState.Playing)
             {
-                //MoveAgent(AIController.algorithm);
+                MoveAgent(AIController.algorithm);
             }
             GameTime += Time.deltaTime;
             System.TimeSpan time = System.TimeSpan.FromSeconds(GameTime);
