@@ -38,9 +38,11 @@ public class AIController : MonoBehaviour
     public static void PrintPopulation(List<Individual> Population, int generation, int mapSize, int index = -1)
     {
         int ctr, maxCtr;
-        if (index > 0)
+        if (index >= 0)
         {
             ctr = index; maxCtr = index + 1;
+            int HighScore = PlayerPrefs.GetInt($"HighScore{mapSize}");
+            Population[index].Fitness = (((float)Population[index].HighestTile / (float)2048) + ((float)Population[index].Score / (float)HighScore)) / 2;
             string WinInd = JsonUtility.ToJson(Population[index], true);
             string pathInd = $"{Application.dataPath}/Winner/{algorithm} {architecture} {mapSize}x{mapSize}.json";
             File.WriteAllText(pathInd, WinInd);

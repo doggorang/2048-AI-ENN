@@ -22,7 +22,7 @@ public class LoadGame : MonoBehaviour
         {
             string path = fileExplorer.fileName;
             AIController.path = path;
-            int ctrSubStr = path.LastIndexOf("2048");
+            int ctrSubStr = path.LastIndexOf("Winner");
             TextFileName.text = path.Substring(ctrSubStr, path.Length - ctrSubStr);
             readText = false;
         }

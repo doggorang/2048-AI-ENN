@@ -33,7 +33,7 @@ public class SceneSwitcher : MonoBehaviour
     }
     public void LoadGame()
     {
-        string mapSize = "Genetic";
+        string mapSize = "4x4";
         int sceneNum;
         GameObject GOMapSize = GameObject.Find("MapSizeOption");
         for (int i = 0; i < GOMapSize.transform.childCount; i++)

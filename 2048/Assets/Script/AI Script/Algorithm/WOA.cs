@@ -50,7 +50,7 @@ public class WOA
                     rndVal = Random.Range(-1f, 1f);
                 tempW.Add(rndVal);
             }
-            Population.Add(new Individual(tempW, architecture, layer, neuron));
+            Population.Add(new Individual(tempW, architecture, AlgorithmOption.WOA, layer, neuron));
         }
     }
 
@@ -119,7 +119,7 @@ public class WOA
             // Equation  2.2
             newIndWeight.Add(best.Weights[j] - A * D);
         }
-        NewPopulation.Add(new Individual(newIndWeight, architecture, numLayer, numNeuron));
+        NewPopulation.Add(new Individual(newIndWeight, architecture, AlgorithmOption.WOA, numLayer, numNeuron));
     }
     private void Search(Individual i, Individual rndSol, float A, float C)
     {
@@ -132,7 +132,7 @@ public class WOA
             // Equation  2.8
             newIndWeight.Add(rndSol.Weights[j] - A * D);
         }
-        NewPopulation.Add(new Individual(newIndWeight, architecture, numLayer, numNeuron));
+        NewPopulation.Add(new Individual(newIndWeight, architecture, AlgorithmOption.WOA, numLayer, numNeuron));
     }
     private void Attack(Individual i, Individual best)
     {
@@ -144,7 +144,7 @@ public class WOA
             float D = Mathf.Abs(i.Weights[j] - best.Weights[j]);
             newIndWeight.Add(D * Mathf.Exp(b * L) * Mathf.Cos(L * 2.0f * Mathf.PI) + best.Weights[j]);
         }
-        NewPopulation.Add(new Individual(newIndWeight, architecture, numLayer, numNeuron));
+        NewPopulation.Add(new Individual(newIndWeight, architecture, AlgorithmOption.WOA, numLayer, numNeuron));
     }
 
     private float Compute_A()

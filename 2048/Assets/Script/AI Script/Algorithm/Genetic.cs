@@ -50,7 +50,7 @@ public class Genetic
                     rndVal = Random.Range(-1f, 1f);
                 tempW.Add(rndVal);
             }
-            Population.Add(new Individual(tempW, architecture, layer, neuron));
+            Population.Add(new Individual(tempW, architecture, AlgorithmOption.Genetic, layer, neuron));
         }
     }
 
@@ -127,7 +127,7 @@ public class Genetic
                 }
                 newIndWeight.Add(FromBinaryString(newBinaryW));
             }
-            Children.Add(new Individual(newIndWeight, architecture, numLayer, numNeuron));
+            Children.Add(new Individual(newIndWeight, architecture, AlgorithmOption.Genetic, numLayer, numNeuron));
         }
     }
     private void Mutation()

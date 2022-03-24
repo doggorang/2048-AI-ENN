@@ -10,10 +10,14 @@ public class Individual
     public float GameTime = 0;
     public List<float> Weights = new List<float>();
     public NN nn;
-    private ArchitectureOption ao;
-    public Individual(List<float> weights, ArchitectureOption ao, int layer = 0, int neuron = 0)
+    public int layer = 0;
+    public int neuron = 0;
+    public ArchitectureOption ao;
+    public AlgorithmOption algo;
+    public Individual(List<float> weights, ArchitectureOption ao, AlgorithmOption algo, int layer, int neuron)
     {
-        Weights = weights; this.ao = ao;
+        Weights = weights; this.ao = ao; this.algo = algo;
+        this.layer = layer; this.neuron = neuron;
         if (ao == ArchitectureOption.NN)
         {
             nn = new NN(weights, layer, neuron);
@@ -22,7 +26,7 @@ public class Individual
 
     public Individual InitialiseCopy(int layer = 0, int neuron = 0)
     {
-        Individual i = new Individual(this.Weights, this.ao, layer, neuron);
+        Individual i = new Individual(this.Weights, this.ao, this.algo, layer, neuron);
         return i;
     }
 }

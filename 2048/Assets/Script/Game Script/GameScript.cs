@@ -69,9 +69,13 @@ public class GameScript : MonoBehaviour
         else
         {
             IsLoad = true;
-            LoadedIndividual = AIController.LoadInd();
+            Individual temp = AIController.LoadInd();
+            AIController.algorithm = temp.algo;
+            AIController.architecture = temp.ao;
+            TextDescriptionAlgorithm.text = "Algorithm  - <b>" + temp.algo + "</b>";
+            TextDescriptionArchitecture.text = "Architecture - <b>" + temp.ao + "</b>";
+            LoadedIndividual = new Individual(temp.Weights, temp.ao, temp.algo, temp.layer, temp.neuron);
         }
-
         RestartGame();
     }
 

@@ -51,7 +51,7 @@ public class MFO
                     rndVal = Random.Range(-1f, 1f);
                 tempW.Add(rndVal);
             }
-            Population.Add(new Individual(tempW, architecture, layer, neuron));
+            Population.Add(new Individual(tempW, architecture, AlgorithmOption.MFO, layer, neuron));
         }
     }
 
@@ -101,7 +101,7 @@ public class MFO
                 t = (a - 1.0f) * Random.value + 1.0f;
                 newIndWeight.Add(distanceToFlame * Mathf.Exp(b * t) * Mathf.Cos(t * 2.0f * Mathf.PI) + bestFlamesVariables[j]);
             }
-            TempPopulation.Add(new Individual(newIndWeight, architecture, numLayer, numNeuron));
+            TempPopulation.Add(new Individual(newIndWeight, architecture, AlgorithmOption.MFO, numLayer, numNeuron));
         }
         Population.Clear();
         foreach (Individual p in TempPopulation)
