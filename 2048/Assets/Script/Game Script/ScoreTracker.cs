@@ -23,7 +23,7 @@ public class ScoreTracker : MonoBehaviour
             if (PlayerPrefs.GetInt($"HighScore{mapSize}") < score)
             {
                 PlayerPrefs.SetInt($"HighScore{mapSize}", score);
-                ScoreText.text = score.ToString();
+                HighScoreText.text = score.ToString();
             }
         }
     }
