@@ -116,19 +116,19 @@ public class GameScript : MonoBehaviour
                 switch (md)
                 {
                     case MoveDirection.Left:
-                        while (MakeOneMoveDownIndex(rows[i]))
+                        while (MakeOneMoveDownIndex(rows[i], true))
                             moveMade = true;
                         break;
                     case MoveDirection.Right:
-                        while (MakeOneMoveUpIndex(rows[i]))
+                        while (MakeOneMoveUpIndex(rows[i], true))
                             moveMade = true;
                         break;
                     case MoveDirection.Up:
-                        while (MakeOneMoveDownIndex(columns[i]))
+                        while (MakeOneMoveDownIndex(columns[i], true))
                             moveMade = true;
                         break;
                     case MoveDirection.Down:
-                        while (MakeOneMoveUpIndex(columns[i]))
+                        while (MakeOneMoveUpIndex(columns[i], true))
                             moveMade = true;
                         break;
                     default:
@@ -191,19 +191,19 @@ public class GameScript : MonoBehaviour
                 switch (md)
                 {
                     case MoveDirection.Left:
-                        while (MakeOneMoveDownIndex(rows[i]))
+                        while (MakeOneMoveDownIndex(rows[i], true))
                             moveMade = true;
                         break;
                     case MoveDirection.Right:
-                        while (MakeOneMoveUpIndex(rows[i]))
+                        while (MakeOneMoveUpIndex(rows[i], true))
                             moveMade = true;
                         break;
                     case MoveDirection.Up:
-                        while (MakeOneMoveDownIndex(columns[i]))
+                        while (MakeOneMoveDownIndex(columns[i], true))
                             moveMade = true;
                         break;
                     case MoveDirection.Down:
-                        while (MakeOneMoveUpIndex(columns[i]))
+                        while (MakeOneMoveUpIndex(columns[i], true))
                             moveMade = true;
                         break;
                     default:
@@ -557,19 +557,19 @@ public class GameScript : MonoBehaviour
                 switch (md)
                 {
                     case MoveDirection.Left:
-                        while (MakeOneMoveDownIndex(rows[i]))
+                        while (MakeOneMoveDownIndex(rows[i], false))
                             moveMade = true;
                         break;
                     case MoveDirection.Right:
-                        while (MakeOneMoveUpIndex(rows[i]))
+                        while (MakeOneMoveUpIndex(rows[i], false))
                             moveMade = true;
                         break;
                     case MoveDirection.Up:
-                        while (MakeOneMoveDownIndex(columns[i]))
+                        while (MakeOneMoveDownIndex(columns[i], false))
                             moveMade = true;
                         break;
                     case MoveDirection.Down:
-                        while (MakeOneMoveUpIndex(columns[i]))
+                        while (MakeOneMoveUpIndex(columns[i], false))
                             moveMade = true;
                         break;
                     default:
@@ -592,7 +592,7 @@ public class GameScript : MonoBehaviour
     IEnumerator MoveOneLineUpIndexCoroutine(Tile[] line, int index)
     {
         lineMoveComplete[index] = false;
-        while (MakeOneMoveUpIndex(line))
+        while (MakeOneMoveUpIndex(line, false))
         {
             moveMade = true;
             yield return new WaitForSeconds(delay);
@@ -602,7 +602,7 @@ public class GameScript : MonoBehaviour
     IEnumerator MoveOneLineDownIndexCoroutine(Tile[] line, int index)
     {
         lineMoveComplete[index] = false;
-        while (MakeOneMoveDownIndex(line))
+        while (MakeOneMoveDownIndex(line, false))
         {
             moveMade = true;
             yield return new WaitForSeconds(delay);
@@ -706,16 +706,24 @@ public class GameScript : MonoBehaviour
     private void GameOver(string text, bool IsWin = false)
     {
         IsGameOver = true;
-        if (IsWin)
+        if (IsLoad)
         {
             GameOverText.text = text;
             GameOverPanel.SetActive(true);
-            EvaluateWinGame(AIController.algorithm);
         }
         else
         {
-            EvaluateGame(AIController.algorithm);
-            IsGameOver = false;
+            if (IsWin)
+            {
+                GameOverText.text = text;
+                GameOverPanel.SetActive(true);
+                EvaluateWinGame(AIController.algorithm);
+            }
+            else
+            {
+                EvaluateGame(AIController.algorithm);
+                IsGameOver = false;
+            }
         }
     }
 
@@ -742,7 +750,7 @@ public class GameScript : MonoBehaviour
         }
         return false;
     }
-    bool MakeOneMoveDownIndex(Tile[] LineOfTiles)
+    bool MakeOneMoveDownIndex(Tile[] LineOfTiles, bool isSimulation)
     {
         for (int i = 0; i < LineOfTiles.Length - 1; i++)
         {
@@ -765,7 +773,10 @@ public class GameScript : MonoBehaviour
                 LineOfTiles[i].mergeThisTurn = true;
                 LineOfTiles[i + 1].Number = 0;
                 LineOfTiles[i].PlayMergeAnimation();
-                ScoreTracker.Instance.Score += LineOfTiles[i].Number;
+                if (!isSimulation)
+                {
+                    ScoreTracker.Instance.Score += LineOfTiles[i].Number;
+                }
                 if (LineOfTiles[i].Number == 2048)
                 {
                     GameOver("You Win", true);
@@ -780,7 +791,7 @@ public class GameScript : MonoBehaviour
         }
         return false;
     }
-    bool MakeOneMoveUpIndex(Tile[] LineOfTiles)
+    bool MakeOneMoveUpIndex(Tile[] LineOfTiles, bool isSimulation)
     {
         for (int i = LineOfTiles.Length - 1; i > 0; i--)
         {
@@ -801,7 +812,10 @@ public class GameScript : MonoBehaviour
                 LineOfTiles[i].mergeThisTurn = true;
                 LineOfTiles[i - 1].Number = 0;
                 LineOfTiles[i].PlayMergeAnimation();
-                ScoreTracker.Instance.Score += LineOfTiles[i].Number;
+                if (!isSimulation)
+                {
+                    ScoreTracker.Instance.Score += LineOfTiles[i].Number;
+                }
                 if (LineOfTiles[i].Number == 2048)
                 {
                     GameOver("You Win", true);

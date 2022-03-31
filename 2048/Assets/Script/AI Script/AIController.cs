@@ -44,7 +44,13 @@ public class AIController : MonoBehaviour
             int HighScore = PlayerPrefs.GetInt($"HighScore{mapSize}");
             Population[index].Fitness = (((float)Population[index].HighestTile / (float)2048) + ((float)Population[index].Score / (float)HighScore)) / 2;
             string WinInd = JsonUtility.ToJson(Population[index], true);
-            string pathInd = $"{Application.dataPath}/Winner/{algorithm} {architecture} {mapSize}x{mapSize}.json";
+
+            string winnerPath = $"{Application.dataPath}/Winner/";
+            if (!Directory.Exists(winnerPath))
+            {
+                Directory.CreateDirectory(winnerPath);
+            }
+            string pathInd = $"{winnerPath}{algorithm} {architecture} {mapSize}x{mapSize}.json";
             File.WriteAllText(pathInd, WinInd);
         }
         else
@@ -62,7 +68,12 @@ public class AIController : MonoBehaviour
             content += "]\n";
         }
         content += "\n";
-        string path = $"{Application.dataPath}/Log/{algorithm}/{architecture}/{mapSize}x{mapSize}.txt";
+        string directoryPath = $"{Application.dataPath}/Log/{algorithm}/{architecture}/";
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+        string path = $"{directoryPath}{mapSize}x{mapSize}.txt";
         if (!File.Exists(path))
             File.WriteAllText(path, content);
         else
