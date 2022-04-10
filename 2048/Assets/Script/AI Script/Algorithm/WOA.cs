@@ -57,10 +57,10 @@ public class WOA
     public void Optimize()
     {
         CalculateFitness();
-        // sorting population
-        Population.Sort(AIController.SortFunc);
         // print population urut dengan fitness
         AIController.PrintPopulation(Population, generation, mapSize);
+        // sorting population
+        Population.Sort(AIController.SortFunc);
         Individual best = Population[0].InitialiseCopy(numLayer, numNeuron);
         foreach (Individual sol in Population)
         {

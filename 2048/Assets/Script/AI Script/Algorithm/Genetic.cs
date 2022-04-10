@@ -87,10 +87,10 @@ public class Genetic
             Population[i].Fitness = temp;
         }
 
-        // sorting population untuk dapat diambil 20% top nya sebagai parent
-        Population.Sort(AIController.SortFunc);
         // print population urut dengan fitness
         AIController.PrintPopulation(Population, generation, mapSize);
+        // sorting population untuk dapat diambil 20% top nya sebagai parent
+        Population.Sort(AIController.SortFunc);
         for (int i = 0; i < populationSize/5; i++)
         {
             Parents.Add(Population[i].InitialiseCopy(numLayer, numNeuron));

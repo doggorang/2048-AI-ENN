@@ -120,8 +120,8 @@ public class MFO
             float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
         }
-        Population.Sort(AIController.SortFunc);
         AIController.PrintPopulation(Population, generation, mapSize);
+        Population.Sort(AIController.SortFunc);
     }
     private void GetBestFlame()
     {
