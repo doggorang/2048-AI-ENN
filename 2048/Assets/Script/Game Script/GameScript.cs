@@ -312,8 +312,15 @@ public class GameScript : MonoBehaviour
                 genetic.RePopulate();
                 TextIterationGeneration.text = "" + genetic.generation;
             }
-            TextIterationPopulation.text = "" + iterPopulation;
-            RestartGame();
+            if (genetic.generation >= ngens)
+            {
+                GameOver("Generation Stop", true);
+            }
+            else
+            {
+                TextIterationPopulation.text = "" + iterPopulation;
+                RestartGame();
+            }
         }
         else if (algorithmOption == AlgorithmOption.MFO)
         {
@@ -332,8 +339,15 @@ public class GameScript : MonoBehaviour
                 mfo.UpdateMothPosition();
                 TextIterationGeneration.text = "" + mfo.generation;
             }
-            TextIterationPopulation.text = "" + iterPopulation;
-            RestartGame();
+            if (mfo.generation >= ngens)
+            {
+                GameOver("Generation Stop", true);
+            }
+            else
+            {
+                TextIterationPopulation.text = "" + iterPopulation;
+                RestartGame();
+            }
         }
         else if (algorithmOption == AlgorithmOption.WOA)
         {
@@ -352,8 +366,15 @@ public class GameScript : MonoBehaviour
                 woa.Optimize();
                 TextIterationGeneration.text = "" + woa.generation;
             }
-            TextIterationPopulation.text = "" + iterPopulation;
-            RestartGame();
+            if (woa.generation >= ngens)
+            {
+                GameOver("Generation Stop", true);
+            }
+            else
+            {
+                TextIterationPopulation.text = "" + iterPopulation;
+                RestartGame();
+            }
         }
     }
     private void EvaluateWinGame(AlgorithmOption algorithmOption)
