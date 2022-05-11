@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WOA
 {
+    public Individual bestInd;
     public List<Individual> Population = new List<Individual>();
     private List<Individual> NewPopulation = new List<Individual>();
     public int populationSize, generation, mapSize;
@@ -52,12 +53,12 @@ public class WOA
             }
             Population.Add(new Individual(tempW, architecture, AlgorithmOption.WOA, layer, neuron));
         }
+        bestInd = Population[0].InitialiseCopy(layer, neuron);
     }
 
     public void Optimize()
     {
         CalculateFitness();
-        // print population urut dengan fitness
         AIController.PrintPopulation(Population, generation, mapSize);
         // sorting population
         Population.Sort(AIController.SortFunc);
@@ -105,6 +106,14 @@ public class WOA
             // calculate fitness highest tile saja karena saat endgame biasanya sudah berantakan jadi second highest tile dll pindah"
             float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
+            if (Population[i].Score > bestInd.Score)
+            {
+                bestInd = Population[i].InitialiseCopy(numLayer, numNeuron);
+                bestInd.Score = Population[i].Score;
+                bestInd.Fitness = Population[i].Fitness;
+                bestInd.HighestTile = Population[i].HighestTile;
+                bestInd.GameTime = Population[i].GameTime;
+            }
         }
     }
 

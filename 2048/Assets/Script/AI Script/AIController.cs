@@ -86,4 +86,25 @@ public class AIController : MonoBehaviour
         Individual ret = JsonUtility.FromJson<Individual>(json);
         return ret;
     }
+    public static void PrintBestInd(Individual bestInd, int generation, int mapSize)
+    {
+        string content = "";
+        content += $"Generation: {generation} Fitness: {bestInd.Fitness} Score: {bestInd.Score} Tile: {bestInd.HighestTile} Time: {bestInd.GameTime}\nWeight: [ ";
+        foreach (float w in bestInd.Weights)
+        {
+            content += w + ", ";
+        }
+        content += "]\n";
+        content += "\n";
+        string directoryPath = $"{Application.dataPath}/Log/{algorithm}/{architecture}/";
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+        string path = $"{directoryPath}{mapSize}x{mapSize}.txt";
+        if (!File.Exists(path))
+            File.WriteAllText(path, content);
+        else
+            File.AppendAllText(path, content);
+    }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Genetic
 {
+    public Individual bestInd;
     public List<Individual> Population = new List<Individual>();
     private List<Individual> Parents = new List<Individual>();
     private List<Individual> Children = new List<Individual>();
@@ -52,6 +53,7 @@ public class Genetic
             }
             Population.Add(new Individual(tempW, architecture, AlgorithmOption.Genetic, layer, neuron));
         }
+        bestInd = Population[0].InitialiseCopy(layer, neuron);
     }
 
     public void RePopulate()
@@ -85,9 +87,16 @@ public class Genetic
             // calculate fitness highest tile saja karena saat endgame biasanya sudah berantakan jadi second highest tile dll pindah"
             float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
+            if (Population[i].Score > bestInd.Score)
+            {
+                bestInd = Population[i].InitialiseCopy(numLayer, numNeuron);
+                bestInd.Score = Population[i].Score;
+                bestInd.Fitness = Population[i].Fitness;
+                bestInd.HighestTile = Population[i].HighestTile;
+                bestInd.GameTime = Population[i].GameTime;
+            }
         }
 
-        // print population urut dengan fitness
         AIController.PrintPopulation(Population, generation, mapSize);
         // sorting population untuk dapat diambil 20% top nya sebagai parent
         Population.Sort(AIController.SortFunc);

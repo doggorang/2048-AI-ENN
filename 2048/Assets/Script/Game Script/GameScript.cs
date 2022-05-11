@@ -314,7 +314,7 @@ public class GameScript : MonoBehaviour
             }
             if (genetic.generation >= ngens)
             {
-                GameOver("Generation Stop", true);
+                GameOverMaxGeneration(genetic.bestInd, genetic.generation);
             }
             else
             {
@@ -341,7 +341,7 @@ public class GameScript : MonoBehaviour
             }
             if (mfo.generation >= ngens)
             {
-                GameOver("Generation Stop", true);
+                GameOverMaxGeneration(mfo.bestInd, mfo.generation);
             }
             else
             {
@@ -368,7 +368,7 @@ public class GameScript : MonoBehaviour
             }
             if (woa.generation >= ngens)
             {
-                GameOver("Generation Stop", true);
+                GameOverMaxGeneration(woa.bestInd, woa.generation);
             }
             else
             {
@@ -746,6 +746,13 @@ public class GameScript : MonoBehaviour
                 IsGameOver = false;
             }
         }
+    }
+    private void GameOverMaxGeneration(Individual bestInd, int generation)
+    {
+        IsGameOver = true;
+        GameOverText.text = "Generation Stop";
+        AIController.PrintBestInd(bestInd, generation, mapSize);
+        GameOverPanel.SetActive(true);
     }
 
     bool CanMove()

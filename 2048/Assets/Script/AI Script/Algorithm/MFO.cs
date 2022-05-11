@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MFO
 {
+    public Individual bestInd;
     public List<Individual> Population = new List<Individual>();
     public List<Individual> PreviousPopulation = new List<Individual>();
     private List<Individual> BestFlames = new List<Individual>();
@@ -53,6 +54,7 @@ public class MFO
             }
             Population.Add(new Individual(tempW, architecture, AlgorithmOption.MFO, layer, neuron));
         }
+        bestInd = Population[0].InitialiseCopy(layer, neuron);
     }
 
     public void UpdateMothPosition()
@@ -119,6 +121,14 @@ public class MFO
             // calculate fitness highest tile saja karena saat endgame biasanya sudah berantakan jadi second highest tile dll pindah"
             float temp = (((float)Population[i].HighestTile / (float)2048) + ((float)Population[i].Score / (float)HighScore)) / 2;
             Population[i].Fitness = temp;
+            if (Population[i].Score > bestInd.Score)
+            {
+                bestInd = Population[i].InitialiseCopy(numLayer, numNeuron);
+                bestInd.Score = Population[i].Score;
+                bestInd.Fitness = Population[i].Fitness;
+                bestInd.HighestTile = Population[i].HighestTile;
+                bestInd.GameTime = Population[i].GameTime;
+            }
         }
         AIController.PrintPopulation(Population, generation, mapSize);
         Population.Sort(AIController.SortFunc);
