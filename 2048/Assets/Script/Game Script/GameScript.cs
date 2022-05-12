@@ -295,6 +295,7 @@ public class GameScript : MonoBehaviour
     }
     private void EvaluateGame(AlgorithmOption algorithmOption)
     {
+        bool GameContinue = true;
         if (algorithmOption == AlgorithmOption.Genetic)
         {
             // setting achivement individual untuk nanti bantu hitung fitness
@@ -315,6 +316,7 @@ public class GameScript : MonoBehaviour
             if (genetic.generation >= ngens)
             {
                 GameOverMaxGeneration(genetic.bestInd, genetic.generation);
+                GameContinue = false;
             }
             else
             {
@@ -342,6 +344,7 @@ public class GameScript : MonoBehaviour
             if (mfo.generation >= ngens)
             {
                 GameOverMaxGeneration(mfo.bestInd, mfo.generation);
+                GameContinue = false;
             }
             else
             {
@@ -369,12 +372,18 @@ public class GameScript : MonoBehaviour
             if (woa.generation >= ngens)
             {
                 GameOverMaxGeneration(woa.bestInd, woa.generation);
+                GameContinue = false;
             }
             else
             {
                 TextIterationPopulation.text = "" + iterPopulation;
                 RestartGame();
             }
+        }
+
+        if (GameContinue)
+        {
+            IsGameOver = false;
         }
     }
     private void EvaluateWinGame(AlgorithmOption algorithmOption)
@@ -743,7 +752,6 @@ public class GameScript : MonoBehaviour
             else
             {
                 EvaluateGame(AIController.algorithm);
-                IsGameOver = false;
             }
         }
     }
