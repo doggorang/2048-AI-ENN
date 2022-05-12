@@ -807,10 +807,10 @@ public class GameScript : MonoBehaviour
                 if (!isSimulation)
                 {
                     ScoreTracker.Instance.Score += LineOfTiles[i].Number;
-                    if (LineOfTiles[i].Number == 2048)
-                    {
-                        GameOver("You Win", true);
-                    }
+                    //if (LineOfTiles[i].Number == 2048)
+                    //{
+                    //    GameOver("You Win", true);
+                    //}
                     // input layer 1
                     if (LineOfTiles[i].Number > HighestTile.Number)
                     {
@@ -849,10 +849,10 @@ public class GameScript : MonoBehaviour
                 if (!isSimulation)
                 {
                     ScoreTracker.Instance.Score += LineOfTiles[i].Number;
-                    if (LineOfTiles[i].Number == 2048)
-                    {
-                        GameOver("You Win", true);
-                    }
+                    //if (LineOfTiles[i].Number == 2048)
+                    //{
+                    //    GameOver("You Win", true);
+                    //}
                     // input layer 1
                     if (LineOfTiles[i].Number > HighestTile.Number)
                     {
